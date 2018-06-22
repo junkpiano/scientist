@@ -9,7 +9,7 @@
 class Scientist<T: Equatable> {
     init() {}
     
-    public func science(process:(Experiment<T>) -> Void) -> T? {
+    public func science(_ process:(Experiment<T>) -> Void) -> T? {
         return Scientist.experiment { (experiment) in
             process(experiment)
             assert(experiment.completed == true, "experiment.use must be called.")

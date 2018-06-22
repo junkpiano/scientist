@@ -26,7 +26,8 @@ class ScientistTests: XCTestCase {
         // Use XCTAssert and related functions to verify your tests produce the correct results.
         var result: Bool = false
         let scientist = Scientist<Bool>()
-        if let returnValue = scientist.science(process: { (exp) in
+        if let returnValue = scientist.science({
+            exp in
             exp.tryNew(candidate: { () -> Bool? in
                 return false
             })
