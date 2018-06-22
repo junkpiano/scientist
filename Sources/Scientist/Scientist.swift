@@ -10,15 +10,18 @@ class Scientist<T: Equatable> {
     init() {}
     
     public func science(_ process:(Experiment<T>) -> Void) -> T? {
-        return Scientist.experiment { (experiment) in
+        return Scientist.process { (experiment) in
             process(experiment)
-            assert(experiment.completed == true, "experiment.use must be called.")
         }
     }
     
-    private static func experiment(process:(Experiment<T>) -> Void) -> T? {
+    public var experiment: Experiment<T> {
+        return Experiment<T>()
+    }
+    
+    private static func process(process:(Experiment<T>) -> Void) -> T? {
         let experiment = Experiment<T>()
         process(experiment)
-        return experiment.before_result
+        return experiment.final_result
     }
 }

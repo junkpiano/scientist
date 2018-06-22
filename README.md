@@ -1,10 +1,12 @@
 # Scientist
 
-[Swift](https://swift.org) implementation inspired by [github/scientist](https://github.com/github/scientist)
+*WIP*
+
+[Swift](https://swift.org) of [github/scientist](https://github.com/github/scientist)
 
 ## Usage
 
-    func allow(user: User) {
+    func allow(user: User) -> Bool {
 	    var result = false
 	    if let returnValue = Scienctist<Bool>().science({
 	    	experiment in
@@ -15,9 +17,14 @@
 	    	experiment.tryNew {
 	    		return user.allowed
 	    	}
+	    	experiment.run()
 	    }) {
 	    	result = returnValue
 	    }
 
 	    return result
     }
+
+## Inspired By
+
+- [github/scientist](https://github.com/github/scientist)

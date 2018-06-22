@@ -9,12 +9,17 @@
 class Experiment<T: Equatable> {
     var before_result: T?
     var after_result: T?
-    var completed: Bool = false
+    var final_result: T?
     
+    public func run() -> T? {
+        final_result = before_result
+        return final_result
+    }
+
     public func use(control: () -> T?) {
         let result = control()
         before_result = result
-        completed = true
+        final_result = result
     }
 
     public func tryNew(candidate: () -> T?){

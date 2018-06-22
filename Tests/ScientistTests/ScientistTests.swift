@@ -21,34 +21,31 @@ class ScientistTests: XCTestCase {
         super.tearDown()
     }
     
-    func testExample() {
+    func testScience() {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
-        var result: Bool = false
-        let scientist = Scientist<Bool>()
-        if let returnValue = scientist.science({
-            exp in
-            exp.tryNew(candidate: { () -> Bool? in
+        let returnValue = Scientist<Bool>().science({
+            experiment in
+            experiment.tryNew(candidate: { () -> Bool? in
                 return false
             })
             
-            exp.use(control: { () -> Bool? in
+            experiment.use(control: { () -> Bool? in
                 return true
             })
-            
-            print("comparison: \(exp.compare())")
-        }) {
-            result = returnValue
-        }
-        
-        print(result)
+        })
+        XCTAssertNotNil(returnValue, "returnValue shoudl not be nil.")
+        XCTAssertTrue(returnValue == true)
     }
     
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
+    func testExperiment() {
+        let experiment = Scientist<Bool>().experiment
+        experiment.use { () -> Bool? in
+            return true
         }
+        experiment.tryNew { () -> Bool? in
+            return false
+        }
+        XCTAssertTrue(experiment.run()!)
     }
-    
 }
