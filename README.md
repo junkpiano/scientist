@@ -2,7 +2,7 @@
 
 *WIP*
 
-[Swift](https://swift.org) of [github/scientist](https://github.com/github/scientist)
+A Swift library for carefully refactoring critical paths.
 
 ## Usage
 
@@ -25,6 +25,6 @@
 	    return result
     }
 
-## Inspired By
+## Porting from
 
 - [github/scientist](https://github.com/github/scientist)
