@@ -9,11 +9,17 @@
 import XCTest
 @testable import Scientist
 
+class MyExp<T: Equatable>: Experiment<T> {
+    var name: String = "test"
+    var enabled: Bool = true
+    override func publish(result: Result<T>) {}
+}
+
 class ScientistTests: XCTestCase {
     
     override func setUp() {
         super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+        // Put setup code here. This method is called before the invocation of each test method in the class.T
     }
     
     override func tearDown() {
@@ -33,6 +39,10 @@ class ScientistTests: XCTestCase {
             experiment.use(control: { () -> Bool? in
                 return true
             })
+            
+            experiment.compare({ (control, candidate) -> Bool in
+                return control() == candidate()
+            })
         })
         XCTAssertNotNil(returnValue, "returnValue shoudl not be nil.")
         XCTAssertTrue(returnValue == true)
@@ -46,6 +56,11 @@ class ScientistTests: XCTestCase {
         experiment.tryNew { () -> Bool? in
             return false
         }
+        
+        experiment.compare { (control, candidate) -> Bool in
+            return control() == candidate()
+        }
+        
         XCTAssertTrue(experiment.run()!)
     }
 }

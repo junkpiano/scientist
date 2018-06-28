@@ -6,28 +6,35 @@
 //  Copyright © 2018 Yusuke Ohashi. All rights reserved.
 //
 
-class Experiment<T: Equatable> {
-    var before_result: T?
-    var after_result: T?
-    var final_result: T?
+open class Experiment<T: Equatable>: Experimentable {
+
+    typealias resultType = T
+    public typealias ExperimentBlock = () -> T?
+    private var behaviors: [String: ExperimentBlock] = [:]
+    private var comparator: ((_ control: ExperimentBlock, _ candidate: ExperimentBlock) -> Bool)? = nil
     
-    public func run() -> T? {
-        final_result = before_result
-        return final_result
+    final public func use(control: @escaping () -> T?) {
+        tryNew(name: "control", candidate: control)
     }
 
-    public func use(control: () -> T?) {
-        let result = control()
-        before_result = result
-        final_result = result
-    }
-
-    public func tryNew(candidate: () -> T?){
-        let result = candidate()
-        after_result = result
+    final public func tryNew(name: String? = nil, candidate: @escaping () -> T?){
+        let blockName = name ?? "candidate"
+        behaviors[blockName] = candidate
     }
     
-    public func compare() -> Bool {
-        return before_result == after_result
+    final public func compare(_ compare: @escaping (_ control: ExperimentBlock, _ candidate: ExperimentBlock) -> Bool) {
+        comparator = compare
     }
+
+    final public func run(name: String? = nil) -> T? {
+        let executedBehavior: String = name ?? "control"
+        
+        if let block = behaviors[executedBehavior] {
+            return block()
+        }
+        
+        return nil
+    }
+    
+    func publish(result: Result<T>) {}
 }

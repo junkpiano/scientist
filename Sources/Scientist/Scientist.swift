@@ -7,7 +7,14 @@
 //
 
 class Scientist<T: Equatable> {
-    init() {}
+
+    public var experiment: Experiment<T> = Experiment<T>()
+
+    init(experiment: Experiment<T>? = nil) {
+        if let _exp = experiment {
+            self.experiment = _exp
+        }
+    }
     
     public func science(_ process:(Experiment<T>) -> Void) -> T? {
         return Scientist.process { (experiment) in
@@ -15,13 +22,14 @@ class Scientist<T: Equatable> {
         }
     }
     
-    public var experiment: Experiment<T> {
-        return Experiment<T>()
-    }
-    
     private static func process(process:(Experiment<T>) -> Void) -> T? {
         let experiment = Experiment<T>()
         process(experiment)
-        return experiment.final_result
+
+        if let result = experiment.run() {
+            return result
+        } else {
+            return nil
+        }
     }
 }

@@ -21,6 +21,8 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		5884DBF920E4D0AB0083BF60 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5884DBF820E4D0AB0083BF60 /* Result.swift */; };
+		58FBB67F20E51D4D004F1734 /* Experimentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58FBB67E20E51D4D004F1734 /* Experimentable.swift */; };
 		OBJ_22 /* Experiment.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* Experiment.swift */; };
 		OBJ_23 /* Scientist.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_10 /* Scientist.swift */; };
 		OBJ_30 /* Package.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_6 /* Package.swift */; };
@@ -46,6 +48,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5884DBF820E4D0AB0083BF60 /* Result.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
+		58FBB67E20E51D4D004F1734 /* Experimentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Experimentable.swift; sourceTree = "<group>"; };
 		OBJ_10 /* Scientist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scientist.swift; sourceTree = "<group>"; };
 		OBJ_13 /* ScientistTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScientistTests.swift; sourceTree = "<group>"; };
 		OBJ_6 /* Package.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
@@ -99,7 +103,7 @@
 			name = Products;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		OBJ_5 /*  */ = {
+		OBJ_5 = {
 			isa = PBXGroup;
 			children = (
 				OBJ_6 /* Package.swift */,
@@ -107,7 +111,6 @@
 				OBJ_11 /* Tests */,
 				OBJ_14 /* Products */,
 			);
-			name = "";
 			sourceTree = "<group>";
 		};
 		OBJ_7 /* Sources */ = {
@@ -121,8 +124,10 @@
 		OBJ_8 /* Scientist */ = {
 			isa = PBXGroup;
 			children = (
+				58FBB67E20E51D4D004F1734 /* Experimentable.swift */,
 				OBJ_9 /* Experiment.swift */,
 				OBJ_10 /* Scientist.swift */,
+				5884DBF820E4D0AB0083BF60 /* Result.swift */,
 			);
 			name = Scientist;
 			path = Sources/Scientist;
@@ -193,7 +198,7 @@
 			knownRegions = (
 				en,
 			);
-			mainGroup = OBJ_5 /*  */;
+			mainGroup = OBJ_5;
 			productRefGroup = OBJ_14 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -211,6 +216,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 0;
 			files = (
+				58FBB67F20E51D4D004F1734 /* Experimentable.swift in Sources */,
+				5884DBF920E4D0AB0083BF60 /* Result.swift in Sources */,
 				OBJ_22 /* Experiment.swift in Sources */,
 				OBJ_23 /* Scientist.swift in Sources */,
 			);
