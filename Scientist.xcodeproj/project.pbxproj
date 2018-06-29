@@ -23,6 +23,7 @@
 /* Begin PBXBuildFile section */
 		5884DBF920E4D0AB0083BF60 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5884DBF820E4D0AB0083BF60 /* Result.swift */; };
 		58FBB67F20E51D4D004F1734 /* Experimentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58FBB67E20E51D4D004F1734 /* Experimentable.swift */; };
+		58FBB68120E5DFD4004F1734 /* Observation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58FBB68020E5DFD4004F1734 /* Observation.swift */; };
 		OBJ_22 /* Experiment.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* Experiment.swift */; };
 		OBJ_23 /* Scientist.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_10 /* Scientist.swift */; };
 		OBJ_30 /* Package.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_6 /* Package.swift */; };
@@ -50,6 +51,7 @@
 /* Begin PBXFileReference section */
 		5884DBF820E4D0AB0083BF60 /* Result.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
 		58FBB67E20E51D4D004F1734 /* Experimentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Experimentable.swift; sourceTree = "<group>"; };
+		58FBB68020E5DFD4004F1734 /* Observation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Observation.swift; sourceTree = "<group>"; };
 		OBJ_10 /* Scientist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scientist.swift; sourceTree = "<group>"; };
 		OBJ_13 /* ScientistTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScientistTests.swift; sourceTree = "<group>"; };
 		OBJ_6 /* Package.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
@@ -128,6 +130,7 @@
 				OBJ_9 /* Experiment.swift */,
 				OBJ_10 /* Scientist.swift */,
 				5884DBF820E4D0AB0083BF60 /* Result.swift */,
+				58FBB68020E5DFD4004F1734 /* Observation.swift */,
 			);
 			name = Scientist;
 			path = Sources/Scientist;
@@ -220,6 +223,7 @@
 				5884DBF920E4D0AB0083BF60 /* Result.swift in Sources */,
 				OBJ_22 /* Experiment.swift in Sources */,
 				OBJ_23 /* Scientist.swift in Sources */,
+				58FBB68120E5DFD4004F1734 /* Observation.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

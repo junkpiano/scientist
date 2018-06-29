@@ -8,22 +8,15 @@
 
 class Scientist<T: Equatable> {
 
-    public var experiment: Experiment<T> = Experiment<T>()
-
-    init(experiment: Experiment<T>? = nil) {
-        if let _exp = experiment {
-            self.experiment = _exp
-        }
-    }
-    
-    public func science(_ process:(Experiment<T>) -> Void) -> T? {
-        return Scientist.process { (experiment) in
+    public func science(name: String = "", _ process:(Experiment<T>) -> Void) -> T? {
+        return Scientist.run(name: name) { (experiment) in
+            experiment.context = default_scientist_context
             process(experiment)
         }
     }
     
-    private static func process(process:(Experiment<T>) -> Void) -> T? {
-        let experiment = Experiment<T>()
+    public static func run(name: String = "", _ process:(Experiment<T>) -> Void) -> T? {
+        let experiment = Experiment<T>(name: name)
         process(experiment)
 
         if let result = experiment.run() {
@@ -32,4 +25,6 @@ class Scientist<T: Equatable> {
             return nil
         }
     }
+    
+    public var default_scientist_context: [String: Any] = [:]
 }

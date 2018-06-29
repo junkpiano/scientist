@@ -10,8 +10,12 @@ import XCTest
 @testable import Scientist
 
 class MyExp<T: Equatable>: Experiment<T> {
-    var name: String = "test"
-    var enabled: Bool = true
+    override init(name: String, enabled: Bool) {
+        super.init(name: name, enabled: enabled)
+        self.name = name
+        self.enabled = enabled
+    }
+    
     override func publish(result: Result<T>) {}
 }
 
@@ -46,21 +50,5 @@ class ScientistTests: XCTestCase {
         })
         XCTAssertNotNil(returnValue, "returnValue shoudl not be nil.")
         XCTAssertTrue(returnValue == true)
-    }
-    
-    func testExperiment() {
-        let experiment = Scientist<Bool>().experiment
-        experiment.use { () -> Bool? in
-            return true
-        }
-        experiment.tryNew { () -> Bool? in
-            return false
-        }
-        
-        experiment.compare { (control, candidate) -> Bool in
-            return control() == candidate()
-        }
-        
-        XCTAssertTrue(experiment.run()!)
-    }
+    }    
 }
