@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Observation<T: Equatable> {
+public struct Observation<T: Equatable> {
     var now: Date
     var experiment: Experiment<T>
     var name: String
@@ -21,5 +21,24 @@ struct Observation<T: Equatable> {
         now = Date()
         value = block()
         during = Calendar.current.dateComponents([.nanosecond], from: now, to: Date()).nanosecond
+    }
+
+    func equivalentTo(other: Observation<T>, comparator: Experiment<T>.ComparatorBlock?) -> Bool {
+        if let comparator = comparator {
+            return comparator(value, other.value)
+        } else {
+            return value == other.value
+        }
+    }
+
+}
+
+func -<T: Equatable> (left: [Observation<T>], right: Observation<T>?) -> [Observation<T>] {
+    return left.filter {
+        guard let right = right else {
+            return true
+        }
+
+        return $0.name != right.name
     }
 }

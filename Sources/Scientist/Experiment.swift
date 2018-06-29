@@ -6,38 +6,46 @@
 //  Copyright © 2018 Yusuke Ohashi. All rights reserved.
 //
 
-open class Experiment<T: Equatable>: Experimentable {
-
-    var name: String
-    var enabled: Bool
-    var context: [String: Any]
-
-    typealias resultType = T
+final public class Experiment<T: Equatable> {
     public typealias ExperimentBlock = () -> T?
+    public typealias ComparatorBlock = (_ control: T?, _ candidate: T?) -> Bool
+
+    public var enabled: () -> Bool = { return false }
+    public var context: [String: Any] = [:]
+    public var publish: ((Result<T>) -> Void)?
+
+    public private(set) var name: String
+
     private var behaviors: [String: ExperimentBlock] = [:]
-    private var comparator: ((_ control: ExperimentBlock, _ candidate: ExperimentBlock) -> Bool)?
+    private var comparator: ComparatorBlock?
 
-    init(name: String = "", enabled: Bool = false) {
+    init(name: String  = Constants.defaultExperimentName) {
         self.name = name
-        self.enabled = enabled
-        self.context = [:]
     }
 
-    final public func use(control: @escaping () -> T?) {
-        tryNew(name: "control", candidate: control)
+    public func use(control: @escaping () -> T?) {
+        tryNew(name: Constants.defaultControlName, candidate: control)
     }
 
-    final public func tryNew(name: String? = nil, candidate: @escaping () -> T?) {
-        let blockName = name ?? "candidate"
+    public func tryNew(name: String? = nil, candidate: @escaping () -> T?) {
+        let blockName = name ?? Constants.defaultCandidateName
         behaviors[blockName] = candidate
     }
 
-    final public func compare(_ compare: @escaping (_ control: ExperimentBlock, _ candidate: ExperimentBlock) -> Bool) {
+    public func compare(_ compare: @escaping ComparatorBlock) {
         comparator = compare
     }
 
-    final public func run(name: String? = nil) -> T? {
-        let executedBehavior: String = name ?? "control"
+    public func run(name: String? = nil) -> T? {
+        let executedBehavior: String = name ?? Constants.defaultControlName
+
+        guard let block = behaviors[executedBehavior] else {
+            return nil
+        }
+
+        if shouldExperimentRun == false {
+            return block()
+        }
 
         var observations: [Observation<T>] = []
         behaviors.keys.forEach { (key) in
@@ -54,12 +62,22 @@ open class Experiment<T: Equatable>: Experimentable {
 
         publish(result: result)
 
-        if let block = behaviors[executedBehavior] {
-            return block()
+        if let control = control {
+            return control.value
         }
 
         return nil
     }
 
-    func publish(result: Result<T>) {}
+    func observationsAreEquivalent(control: Observation<T>, candidate: Observation<T>) -> Bool {
+        return control.equivalentTo(other: candidate, comparator: comparator)
+    }
+
+    private func publish(result: Result<T>) {
+        publish?(result)
+    }
+
+    private var shouldExperimentRun: Bool {
+        return behaviors.count > 1 && enabled()
+    }
 }

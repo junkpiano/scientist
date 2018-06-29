@@ -7,7 +7,6 @@ A Swift library for carefully refactoring critical paths.
 ## Usage
 
     func allow(user: User) -> Bool {
-	    var result = false
 	    if let returnValue = Scienctist<Bool>().science({
 	    	experiment in
 	    	experiment.use {
@@ -19,10 +18,10 @@ A Swift library for carefully refactoring critical paths.
 	    	}
 	    	experiment.run()
 	    }) {
-	    	result = returnValue
+	    	return returnValue
 	    }
 
-	    return result
+	    return false
     }
 
 ## Porting from

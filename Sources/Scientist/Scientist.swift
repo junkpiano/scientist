@@ -6,25 +6,26 @@
 //  Copyright © 2018 Yusuke Ohashi. All rights reserved.
 //
 
-class Scientist<T: Equatable> {
+public struct Scientist<T: Equatable> {
 
-    public func science(name: String = "", _ process: (Experiment<T>) -> Void) -> T? {
+    public func science(name: String = "", options: [String: Any] = [:], _ process: (Experiment<T>) -> Void) -> T? {
         return Scientist.run(name: name) { (experiment) in
-            experiment.context = default_scientist_context
+            experiment.context = defaultScientistContext
             process(experiment)
         }
     }
 
-    public static func run(name: String = "", _ process: (Experiment<T>) -> Void) -> T? {
-        let experiment = Experiment<T>(name: name)
-        process(experiment)
+    public static func run(name: String = "", options: [String: Any] = [:], _ process: (Experiment<T>) -> Void) -> T? {
+        let exp = Experiment<T>(name: name)
+        process(exp)
 
-        if let result = experiment.run() {
+        let runName: String? = options[Constants.runParameter] as? String
+        if let result = exp.run(name: runName) {
             return result
         } else {
             return nil
         }
     }
 
-    public var default_scientist_context: [String: Any] = [:]
+    public var defaultScientistContext: [String: Any] = [:]
 }

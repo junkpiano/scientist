@@ -8,14 +8,28 @@
 
 import Foundation
 
-struct Result<T: Equatable> {
-    var experiment: Experiment<T>
-    var control: Observation<T>?
-    var observations: [Observation<T>]
+public struct Result<T: Equatable> {
+    let experiment: Experiment<T>
+    let control: Observation<T>?
+    let observations: [Observation<T>]
+    let candidates: [Observation<T>]
+    var mismatches: [Observation<T>] = []
 
     init(experiment: Experiment<T>, observations: [Observation<T>], control: Observation<T>? = nil) {
         self.experiment = experiment
         self.observations = observations
         self.control = control
+        self.candidates = observations - control
+        evaluate_candidate()
+    }
+
+    private mutating func evaluate_candidate() {
+        guard let control = control else {
+            return
+        }
+
+        mismatches = candidates.filter { (candidate) -> Bool in
+            return experiment.observationsAreEquivalent(control: control, candidate: candidate) == false
+        }
     }
 }
