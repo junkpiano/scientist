@@ -23,6 +23,7 @@
 /* Begin PBXBuildFile section */
 		5884DBF920E4D0AB0083BF60 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5884DBF820E4D0AB0083BF60 /* Result.swift */; };
 		58B86EB820E6957E0096B6DB /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58B86EB720E6957E0096B6DB /* Constants.swift */; };
+		58B86EBA20E6AA8C0096B6DB /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58B86EB920E6AA8C0096B6DB /* Error.swift */; };
 		58FBB68120E5DFD4004F1734 /* Observation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58FBB68020E5DFD4004F1734 /* Observation.swift */; };
 		OBJ_22 /* Experiment.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* Experiment.swift */; };
 		OBJ_23 /* Scientist.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_10 /* Scientist.swift */; };
@@ -51,6 +52,7 @@
 /* Begin PBXFileReference section */
 		5884DBF820E4D0AB0083BF60 /* Result.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
 		58B86EB720E6957E0096B6DB /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		58B86EB920E6AA8C0096B6DB /* Error.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
 		58FBB68020E5DFD4004F1734 /* Observation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Observation.swift; sourceTree = "<group>"; };
 		OBJ_10 /* Scientist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scientist.swift; sourceTree = "<group>"; };
 		OBJ_13 /* ScientistTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScientistTests.swift; sourceTree = "<group>"; };
@@ -131,6 +133,7 @@
 				5884DBF820E4D0AB0083BF60 /* Result.swift */,
 				58FBB68020E5DFD4004F1734 /* Observation.swift */,
 				58B86EB720E6957E0096B6DB /* Constants.swift */,
+				58B86EB920E6AA8C0096B6DB /* Error.swift */,
 			);
 			name = Scientist;
 			path = Sources/Scientist;
@@ -220,6 +223,7 @@
 			buildActionMask = 0;
 			files = (
 				58B86EB820E6957E0096B6DB /* Constants.swift in Sources */,
+				58B86EBA20E6AA8C0096B6DB /* Error.swift in Sources */,
 				5884DBF920E4D0AB0083BF60 /* Result.swift in Sources */,
 				OBJ_22 /* Experiment.swift in Sources */,
 				OBJ_23 /* Scientist.swift in Sources */,

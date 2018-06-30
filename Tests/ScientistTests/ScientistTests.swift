@@ -24,79 +24,91 @@ class ScientistTests: XCTestCase {
     func testScience() {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
-        let returnValue = Scientist<Bool>().science({ experiment in
-            experiment.tryNew(candidate: { () -> Bool? in
-                return false
-            })
+        do {
+            let returnValue = try Scientist<Bool>().science({ experiment in
+                experiment.tryNew(candidate: { () -> Bool in
+                    return false
+                })
 
-            experiment.use(control: { () -> Bool? in
-                return true
-            })
+                experiment.use(control: { () -> Bool in
+                    return true
+                })
 
-            experiment.compare({ (controlValue, candidateValue) -> Bool in
-                return controlValue == candidateValue
+                experiment.compare({ (controlValue, candidateValue) -> Bool in
+                    return controlValue == candidateValue
+                })
             })
-        })
-        XCTAssertNotNil(returnValue, "returnValue should not be nil.")
-        XCTAssertTrue(returnValue == true)
+            XCTAssertNotNil(returnValue, "returnValue should not be nil.")
+            XCTAssertTrue(returnValue == true)
+        } catch {
+            print(error)
+        }
     }
 
-    func testCompareWithNil() {
+    func testCompareWithComparator() {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
-        let returnValue = Scientist<String>().science(name: "CompareWithNil") { (experiment) in
+        do {
+            let returnValue = try Scientist<String>().science(name: "CompareWithNil") { (experiment) in
 
-            experiment.enabled = {return true}
-            experiment.publish = {
-                result in
-                XCTAssert(result.mismatches.count > 0)
-                XCTAssert(result.mismatches[0].value == nil)
+                experiment.enabled = {return true}
+                experiment.publish = {
+                    result in
+                    XCTAssert(result.mismatches.count == 0)
+//                    XCTAssert(result.mismatches[0].value == "")
+                }
+
+                XCTAssertTrue(experiment.name == "CompareWithNil")
+
+                experiment.tryNew(candidate: { () -> String in
+                    return ""
+                })
+
+                experiment.use(control: { () -> String in
+                    return "test"
+                })
+
+                experiment.compare({ (controlValue, _) -> Bool in
+                    return controlValue.starts(with: "te")
+                })
+
             }
 
-            XCTAssertTrue(experiment.name == "CompareWithNil")
-
-            experiment.tryNew(candidate: { () -> String? in
-                return nil
-            })
-
-            experiment.use(control: { () -> String? in
-                return "test"
-            })
-
-            experiment.compare({ (controlValue, candidateValue) -> Bool in
-                return controlValue == candidateValue
-            })
-
+            XCTAssertNotNil(returnValue, "returnValue shoudl not be nil.")
+            XCTAssertTrue(returnValue == "test")
+        } catch {
+            print(error)
         }
-
-        XCTAssertNotNil(returnValue, "returnValue shoudl not be nil.")
-        XCTAssertTrue(returnValue == "test")
     }
 
     func testCustomExperiment() {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
-        let returnValue = Scientist<Bool>().science(name: "test") { (experiment) in
-            overrideExpParams(experiment: experiment)
+        do {
+            let returnValue = try Scientist<Bool>().science(name: "test") { (experiment) in
+                overrideExpParams(experiment: experiment)
 
-            XCTAssertTrue(experiment.name == "test")
+                XCTAssertTrue(experiment.name == "test")
 
-            experiment.tryNew(candidate: { () -> Bool? in
-                return false
-            })
+                experiment.tryNew(candidate: { () -> Bool in
+                    return false
+                })
 
-            experiment.use(control: { () -> Bool? in
-                return true
-            })
+                experiment.use(control: { () -> Bool in
+                    return true
+                })
 
-            experiment.compare({ (controlValue, candidateValue) -> Bool in
-                return controlValue == candidateValue
-            })
+                experiment.compare({ (controlValue, candidateValue) -> Bool in
+                    return controlValue == candidateValue
+                })
 
+            }
+
+            XCTAssertNotNil(returnValue, "returnValue shoudl not be nil.")
+            XCTAssertTrue(returnValue == true)
+        } catch {
+            print(error)
         }
-
-        XCTAssertNotNil(returnValue, "returnValue shoudl not be nil.")
-        XCTAssertTrue(returnValue == true)
     }
 
     func overrideExpParams(experiment: Experiment<Bool>) {

@@ -8,23 +8,19 @@
 
 public struct Scientist<T: Equatable> {
 
-    public func science(name: String = "", options: [String: Any] = [:], _ process: (Experiment<T>) -> Void) -> T? {
-        return Scientist.run(name: name) { (experiment) in
+    public func science(name: String = "", options: [String: Any] = [:], _ process: (Experiment<T>) -> Void) throws -> T {
+        return try Scientist.run(name: name) { (experiment) in
             experiment.context = defaultScientistContext
             process(experiment)
         }
     }
 
-    public static func run(name: String = "", options: [String: Any] = [:], _ process: (Experiment<T>) -> Void) -> T? {
+    public static func run(name: String = "", options: [String: Any] = [:], _ process: (Experiment<T>) -> Void) throws -> T {
         let exp = Experiment<T>(name: name)
         process(exp)
 
         let runName: String? = options[Constants.runParameter] as? String
-        if let result = exp.run(name: runName) {
-            return result
-        } else {
-            return nil
-        }
+        return try exp.run(name: runName)
     }
 
     public var defaultScientistContext: [String: Any] = [:]

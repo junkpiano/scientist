@@ -7,8 +7,9 @@
 //
 
 final public class Experiment<T: Equatable> {
-    public typealias ExperimentBlock = () -> T?
-    public typealias ComparatorBlock = (_ control: T?, _ candidate: T?) -> Bool
+    public typealias ExperimentBlock = () -> T
+    public typealias ComparatorBlock = (_ control: T, _ candidate: T) -> Bool
+    public typealias IgnoreObservationsBlock = (_ control: Observation<T>, _ candidate: Observation<T>) -> Bool
 
     public var enabled: () -> Bool = { return false }
     public var context: [String: Any] = [:]
@@ -18,29 +19,34 @@ final public class Experiment<T: Equatable> {
 
     private var behaviors: [String: ExperimentBlock] = [:]
     private var comparator: ComparatorBlock?
+    private var ignoreConditions: [IgnoreObservationsBlock] = []
 
     init(name: String  = Constants.defaultExperimentName) {
         self.name = name
     }
 
-    public func use(control: @escaping () -> T?) {
+    public func use(control: @escaping () -> T) {
         tryNew(name: Constants.defaultControlName, candidate: control)
     }
 
-    public func tryNew(name: String? = nil, candidate: @escaping () -> T?) {
+    public func tryNew(name: String? = nil, candidate: @escaping () -> T) {
         let blockName = name ?? Constants.defaultCandidateName
         behaviors[blockName] = candidate
+    }
+
+    public func ignores(_ condition:@escaping IgnoreObservationsBlock) {
+        ignoreConditions.append(condition)
     }
 
     public func compare(_ compare: @escaping ComparatorBlock) {
         comparator = compare
     }
 
-    public func run(name: String? = nil) -> T? {
+    public func run(name: String? = nil) throws -> T {
         let executedBehavior: String = name ?? Constants.defaultControlName
 
         guard let block = behaviors[executedBehavior] else {
-            return nil
+            throw ExperimentError.behaviorNotFound
         }
 
         if shouldExperimentRun == false {
@@ -66,11 +72,21 @@ final public class Experiment<T: Equatable> {
             return control.value
         }
 
-        return nil
+        throw ExperimentError.valueNotReturned
     }
 
     func observationsAreEquivalent(control: Observation<T>, candidate: Observation<T>) -> Bool {
         return control.equivalentTo(other: candidate, comparator: comparator)
+    }
+
+    func ignoresMismatchedObservations(control: Observation<T>, candidate: Observation<T>) -> Bool {
+        var result: Bool = false
+        ignoreConditions.forEach { (condition) in
+            if condition(control, candidate) {
+                result = true
+            }
+        }
+        return result
     }
 
     private func publish(result: Result<T>) {

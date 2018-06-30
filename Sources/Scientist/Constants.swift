@@ -2,7 +2,8 @@
 //  Constants.swift
 //  Scientist
 //
-//  Created by Ohashi, Yusuke a | Mike | ECMD on 2018/06/30.
+//  Created by Yusuke Ohashi on 2018/06/30.
+//  Copyright © 2018 Yusuke Ohashi. All rights reserved.
 //
 
 import Foundation

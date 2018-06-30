@@ -12,7 +12,7 @@ public struct Observation<T: Equatable> {
     var now: Date
     var experiment: Experiment<T>
     var name: String
-    var value: T?
+    var value: T
     var during: Int?
 
     init(name: String, experiment: Experiment<T>, block: Experiment<T>.ExperimentBlock) {
@@ -41,4 +41,12 @@ func -<T: Equatable> (left: [Observation<T>], right: Observation<T>?) -> [Observ
 
         return $0.name != right.name
     }
+}
+
+func -<T: Equatable> (left: [Observation<T>], right: [Observation<T>]) -> [Observation<T>] {
+    var result = left
+    right.forEach { (obv) in
+        result = result - obv
+    }
+    return result
 }

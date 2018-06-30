@@ -7,7 +7,7 @@ A Swift library for carefully refactoring critical paths.
 ## Usage
 
     func allow(user: User) -> Bool {
-	    if let returnValue = Scienctist<Bool>().science({
+	    return Scienctist<Bool>().science({
 	    	experiment in
 	    	experiment.use {
 	    		return module.check_user(user)
@@ -17,13 +17,13 @@ A Swift library for carefully refactoring critical paths.
 	    		return user.allowed
 	    	}
 	    	experiment.run()
-	    }) {
-	    	return returnValue
-	    }
-
-	    return false
+	    })!
     }
 
 ## Porting from
 
 - [github/scientist](https://github.com/github/scientist)
+
+## Author
+
+- Yusuke "Steve" Ohashi <[github](https://github.com/junkpiano), [Twitter](https://twitter.com/junkpiano)>
