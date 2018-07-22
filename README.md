@@ -1,7 +1,5 @@
 # Scientist
 
-*WIP*
-
 A Swift library for carefully refactoring critical paths.
 
 ## Usage
