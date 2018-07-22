@@ -1,5 +1,7 @@
 # Scientist
 
+[![Coverage Status](https://coveralls.io/repos/github/junkpiano/scientist/badge.svg?branch=master)](https://coveralls.io/github/junkpiano/scientist?branch=master)
+
 A Swift library for carefully refactoring critical paths.
 
 ## Usage

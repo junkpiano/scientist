@@ -1,0 +1,5 @@
+coverage_service: coveralls
+xcodeproj: Scientist.xcodeproj
+scheme: Scientist-Package
+ignore:
+  - Tests/*
