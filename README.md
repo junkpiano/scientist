@@ -4,6 +4,20 @@
 
 A Swift library for carefully refactoring critical paths.
 
+## Installation
+
+### Cocoapods
+
+    pod 'Scientist', '~> 0.1.0'
+
+### Swift Package Manager
+
+    (snip)
+    dependencies: [
+    	.package(url: "https://github.com/junkpiano/scientist.git", from: "0.1.0")
+    ]
+    (snip)
+
 ## Usage
 
     func allow(user: User) -> Bool {
