@@ -1,5 +1,6 @@
 coverage_service: coveralls
 xcodeproj: Scientist.xcodeproj
 scheme: Scientist-Package
+binary_basename: Scientist
 ignore:
   - Tests/*
