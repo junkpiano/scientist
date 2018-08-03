@@ -40,4 +40,4 @@ A Swift library for carefully refactoring critical paths.
 
 ## Author
 
-- Yusuke "Steve" Ohashi <[github](https://github.com/junkpiano), [Twitter](https://twitter.com/junkpiano)>
+- Yusuke Ohashi <[github](https://github.com/junkpiano), [Twitter](https://twitter.com/junkpiano)>
