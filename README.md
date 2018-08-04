@@ -37,6 +37,15 @@ A Swift library for carefully refactoring critical paths.
       }
     }
 
+## Development
+
+    swift package generate-xcodeproj
+    open Scientist.xcodeproj
+
+please run test before you send pull request
+
+    swift test
+
 ## Porting from
 
 - [github/scientist](https://github.com/github/scientist)
