@@ -21,18 +21,30 @@ A Swift library for carefully refactoring critical paths.
 ## Usage
 
     func allow(user: User) -> Bool {
-	    return Scienctist<Bool>().science({
-	    	experiment in
-	    	experiment.use {
-	    		return module.check_user(user)
-	    	}
+      do {
+        return try Scienctist<Bool>().science({
+          experiment in
+          experiment.use {
+            return module.check_user(user)
+          }
 
-	    	experiment.tryNew {
-	    		return user.allowed
-	    	}
-	    	experiment.run()
-	    })!
+          experiment.tryNew {
+            return user.allowed
+          }
+        })
+      } catch {
+        return false
+      }
     }
+
+## Development
+
+    swift package generate-xcodeproj
+    open Scientist.xcodeproj
+
+please run test before you send pull request
+
+    swift test
 
 ## Porting from
 
