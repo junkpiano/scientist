@@ -9,11 +9,11 @@
 import Foundation
 
 public struct Observation<T: Equatable> {
-    var now: Date
-    var experiment: Experiment<T>
-    var name: String
-    var value: T
-    var during: Int?
+    public var now: Date
+    public var experiment: Experiment<T>
+    public var name: String
+    public var value: T
+    public var during: Int?
 
     init(name: String, experiment: Experiment<T>, block: Experiment<T>.ExperimentBlock) {
         self.name = name
@@ -43,10 +43,24 @@ func -<T: Equatable> (left: [Observation<T>], right: Observation<T>?) -> [Observ
     }
 }
 
+func -=<T: Equatable> (left: inout [Observation<T>], right: Observation<T>?) {
+    guard let right = right else {
+        return
+    }
+
+    let temp = left
+    left = temp - right
+}
+
+func -=<T: Equatable> (left: inout [Observation<T>], right: [Observation<T>]) {
+    let temp = left
+    left = temp - right
+}
+
 func -<T: Equatable> (left: [Observation<T>], right: [Observation<T>]) -> [Observation<T>] {
     var result = left
     right.forEach { (obv) in
-        result = result - obv
+        result -= obv
     }
     return result
 }
