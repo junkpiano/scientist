@@ -62,6 +62,6 @@ public struct Result<T: Equatable> {
             experiment.ignoresMismatchedObservations(control: control, candidate: mismatch)
         })
 
-        mismatches = mismatches - ignores
+        mismatches -= ignores
     }
 }
