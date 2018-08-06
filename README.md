@@ -1,6 +1,7 @@
 # Scientist
 
 [![Build Status](https://travis-ci.org/junkpiano/scientist.svg?branch=master)](https://travis-ci.org/junkpiano/scientist) [![Coverage Status](https://coveralls.io/repos/github/junkpiano/scientist/badge.svg?branch=master)](https://coveralls.io/github/junkpiano/scientist?branch=master)
+[![Documentation](./docs/badge.svg)](https://junkpiano.github.io/scientist)
 
 A Swift library for carefully refactoring critical paths.
 
@@ -29,7 +30,7 @@ A Swift library for carefully refactoring critical paths.
 
           // alternatively, you can use A/B test-like logic.
           experiment.enabled = {
-            return Int(arc4random_uniform(6) + 1) % 3 == 0 // alternatively, you can use A/B test-like logic.
+            return Int(arc4random_uniform(6) + 1) % 3 == 0
           }
 
           experiment.publish = { result in
@@ -49,6 +50,8 @@ A Swift library for carefully refactoring critical paths.
         return false
       }
     }
+
+Full Documentation is available [Here](https://junkpiano.github.io/scientist).
 
 ## Development
 

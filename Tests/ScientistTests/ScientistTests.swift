@@ -36,7 +36,7 @@ class ScientistTests: XCTestCase {
 
                 experiment.compare({ (controlValue, candidateValue) -> Bool in
                     return controlValue == candidateValue
-                })
+                })                
             })
             XCTAssertNotNil(returnValue, "returnValue should not be nil.")
             XCTAssertTrue(returnValue == true)

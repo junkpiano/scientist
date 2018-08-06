@@ -9,11 +9,11 @@
 import Foundation
 
 public struct Observation<T: Equatable> {
-    var now: Date
-    var experiment: Experiment<T>
-    var name: String
-    var value: T
-    var during: Int?
+    public var now: Date
+    public var experiment: Experiment<T>
+    public var name: String
+    public var value: T
+    public var during: Int?
 
     init(name: String, experiment: Experiment<T>, block: Experiment<T>.ExperimentBlock) {
         self.name = name

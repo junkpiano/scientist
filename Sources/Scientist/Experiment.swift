@@ -6,9 +6,14 @@
 //  Copyright © 2018 Yusuke Ohashi. All rights reserved.
 //
 
+/**
+ `Experiment` class manages blocks for experimental logics, and performs publishing of your experiment results.
+ */
 final public class Experiment<T: Equatable> {
     public typealias ExperimentBlock = () -> T
     public typealias ComparatorBlock = (_ control: T, _ candidate: T) -> Bool
+
+    /// Type of block which define the conditions to ignore comparing observations.
     public typealias IgnoreObservationsBlock = (_ control: Observation<T>, _ candidate: Observation<T>) -> Bool
 
     public var enabled: () -> Bool = { return false }
@@ -21,15 +26,11 @@ final public class Experiment<T: Equatable> {
     private var comparator: ComparatorBlock?
     private var ignoreConditions: [IgnoreObservationsBlock] = []
 
-    init(name: String  = Constants.defaultExperimentName) {
-        self.name = name
-    }
-
-    public func use(control: @escaping () -> T) {
+    public func use(control: @escaping ExperimentBlock) {
         tryNew(name: Constants.defaultControlName, candidate: control)
     }
 
-    public func tryNew(name: String? = nil, candidate: @escaping () -> T) {
+    public func tryNew(name: String? = nil, candidate: @escaping ExperimentBlock) {
         let blockName = name ?? Constants.defaultCandidateName
         behaviors[blockName] = candidate
     }
@@ -73,6 +74,10 @@ final public class Experiment<T: Equatable> {
         }
 
         throw ExperimentError.valueNotReturned
+    }
+
+    init(name: String  = Constants.defaultExperimentName) {
+        self.name = name
     }
 
     func observationsAreEquivalent(control: Observation<T>, candidate: Observation<T>) -> Bool {

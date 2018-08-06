@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum ExperimentError: Error {
+public enum ExperimentError: Error {
     case behaviorNotFound
     case valueNotReturned
     case unknownError
