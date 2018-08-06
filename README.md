@@ -24,6 +24,19 @@ A Swift library for carefully refactoring critical paths.
       do {
         return try Scienctist<Bool>().science({
           experiment in
+          // required to enable Experiment
+          experiment.enabled = { return true }
+
+          // alternatively, you can use A/B test-like logic.
+          experiment.enabled = {
+            return Int(arc4random_uniform(6) + 1) % 3 == 0 // alternatively, you can use A/B test-like logic.
+          }
+
+          experiment.publish = { result in
+            // do something to publish Result data.
+            // send to your log server(Graphite, InfluxDB, etc.), or 3rd party logger like NewRelic, Firebase.
+          }
+
           experiment.use {
             return module.check_user(user)
           }
