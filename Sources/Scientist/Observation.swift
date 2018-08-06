@@ -43,6 +43,20 @@ func -<T: Equatable> (left: [Observation<T>], right: Observation<T>?) -> [Observ
     }
 }
 
+func -=<T: Equatable> (left: inout [Observation<T>], right: Observation<T>?) {
+    guard let right = right else {
+        return
+    }
+
+    let temp = left
+    left = temp - right
+}
+
+func -=<T: Equatable> (left: inout [Observation<T>], right: [Observation<T>]) {
+    let temp = left
+    left = temp - right
+}
+
 func -<T: Equatable> (left: [Observation<T>], right: [Observation<T>]) -> [Observation<T>] {
     var result = left
     right.forEach { (obv) in
