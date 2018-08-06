@@ -13,6 +13,10 @@ GEM
     babosa (1.0.2)
     backports (3.11.3)
     claide (1.0.2)
+    claide-plugins (0.9.2)
+      cork
+      nap
+      open4 (~> 1.3)
     clamp (0.6.5)
     cocoapods (1.5.3)
       activesupport (>= 4.0.2, < 5)
@@ -53,6 +57,24 @@ GEM
       highline (~> 1.7.2)
     concurrent-ruby (1.0.5)
     connection_pool (2.2.2)
+    cork (0.3.0)
+      colored2 (~> 3.1)
+    danger (5.6.4)
+      claide (~> 1.0)
+      claide-plugins (>= 0.9.2)
+      colored2 (~> 3.1)
+      cork (~> 0.1)
+      faraday (~> 0.9)
+      faraday-http-cache (~> 1.0)
+      git (~> 1)
+      kramdown (~> 1.5)
+      no_proxy_fix
+      octokit (~> 4.7)
+      terminal-table (~> 1)
+    danger-swiftlint (0.17.3)
+      danger
+      rake (> 10)
+      thor (~> 0.19)
     declarative (0.0.10)
     declarative-option (0.1.0)
     domain_name (0.5.20180417)
@@ -68,6 +90,8 @@ GEM
     faraday-cookie_jar (0.0.6)
       faraday (>= 0.7.4)
       http-cookie (~> 1.0.0)
+    faraday-http-cache (1.3.1)
+      faraday (~> 0.8)
     faraday_middleware (0.12.2)
       faraday (>= 0.7.4, < 1.0)
     fastimage (2.1.3)
@@ -118,6 +142,7 @@ GEM
       net-http-persistent (>= 2.7)
       net-http-pipeline
     gh_inspector (1.1.3)
+    git (1.4.0)
     google-api-client (0.21.2)
       addressable (~> 2.5, >= 2.5.1)
       googleauth (>= 0.5, < 0.7.0)
@@ -150,6 +175,7 @@ GEM
       xcinvoke (~> 0.3.0)
     json (2.1.0)
     jwt (2.1.0)
+    kramdown (1.17.0)
     launchy (2.4.3)
       addressable (~> 2.3)
     liferaft (0.0.6)
@@ -176,8 +202,11 @@ GEM
       connection_pool (~> 2.2)
     net-http-pipeline (1.0.1)
     netrc (0.11.0)
+    no_proxy_fix (0.1.2)
     nokogiri (1.8.4)
       mini_portile2 (~> 2.3.0)
+    octokit (4.9.0)
+      sawyer (~> 0.8.0, >= 0.5.3)
     open4 (1.3.4)
     os (0.9.6)
     plist (3.4.0)
@@ -185,6 +214,7 @@ GEM
     pusher-client (0.6.2)
       json
       websocket (~> 1.0)
+    rake (12.3.1)
     rb-fsevent (0.10.3)
     rb-inotify (0.9.10)
       ffi (>= 0.5.0, < 2)
@@ -202,6 +232,9 @@ GEM
     sass-listen (4.0.0)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
+    sawyer (0.8.1)
+      addressable (>= 2.3.5, < 2.6)
+      faraday (~> 0.8, < 1.0)
     security (0.1.3)
     signet (0.8.1)
       addressable (~> 2.3)
@@ -222,6 +255,7 @@ GEM
     terminal-notifier (1.8.0)
     terminal-table (1.8.0)
       unicode-display_width (~> 1.1, >= 1.1.1)
+    thor (0.20.0)
     thread_safe (0.3.6)
     travis (1.8.8)
       backports
@@ -265,6 +299,8 @@ PLATFORMS
 
 DEPENDENCIES
   cocoapods (~> 1.5.3)
+  danger
+  danger-swiftlint
   fastlane
   jazzy
   slather (~> 2.4.6)

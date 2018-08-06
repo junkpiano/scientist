@@ -2,6 +2,8 @@ language: objective-c
 osx_image: xcode9.3
 install:
   - bundle install
+before_script:
+  - bundle exec danger
 script:
   - swift package generate-xcodeproj
   - bundle exec fastlane test
