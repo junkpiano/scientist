@@ -7,3 +7,5 @@ before_script:
 script:
   - swift package generate-xcodeproj
   - bundle exec fastlane test
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
