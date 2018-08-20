@@ -1,7 +1,6 @@
 # Scientist
 
 [![Build Status](https://travis-ci.org/junkpiano/scientist.svg?branch=master)](https://travis-ci.org/junkpiano/scientist)
-[![Coverage Status](https://coveralls.io/repos/github/junkpiano/scientist/badge.svg?branch=master)](https://coveralls.io/github/junkpiano/scientist?branch=master)
 [![codecov](https://codecov.io/gh/junkpiano/scientist/branch/master/graph/badge.svg)](https://codecov.io/gh/junkpiano/scientist)
 [![Documentation](https://raw.githubusercontent.com/junkpiano/scientist/master/docs/badge.svg?sanitize=true)](https://junkpiano.github.io/scientist/)
 
