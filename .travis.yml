@@ -7,4 +7,5 @@ before_script:
 script:
   - bundle exec fastlane test
 after_success:
-  - bash <(curl -s https://codecov.io/bash) -f fastlane/test_output/cobertura.xml -X coveragepy -X gcov -X xcode
+  - bash <(curl -s https://codecov.io/bash)
+  
