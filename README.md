@@ -60,7 +60,8 @@ Full Documentation is available [Here](https://junkpiano.github.io/scientist/).
 
 ## Development
 
-    swift package generate-xcodeproj
+Simply,
+
     open Scientist.xcodeproj
 
 please run test before you send pull request

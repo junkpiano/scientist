@@ -11,6 +11,15 @@
 You have to specify return type which is `Equatable`.
  */
 public struct Scientist<T: Equatable> {
+    var defaultScientistContext: [String: Any]
+
+    public init() {
+        self.init(with: nil)
+    }
+    
+    public init(with context: [String: Any]? = nil) {
+        defaultScientistContext = context ?? [:]
+	}
 
     /**
      conduct science.
@@ -46,6 +55,4 @@ public struct Scientist<T: Equatable> {
         let runName: String? = options[Constants.runParameter] as? String
         return try exp.run(name: runName)
     }
-
-    var defaultScientistContext: [String: Any] = [:]
 }
