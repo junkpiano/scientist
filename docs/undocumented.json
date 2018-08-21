@@ -1,180 +1,180 @@
 {
   "warnings": [
     {
-      "file": "/Users/yusuke.a.ohashi/src/github.com/junkpiano/Scientist/Sources/Scientist/Error.swift",
+      "file": "/Users/yusuke/src/github.com/junkpiano/Scientist/Sources/Scientist/Error.swift",
       "line": 11,
       "symbol": "ExperimentError",
       "symbol_kind": "source.lang.swift.decl.enum",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yusuke.a.ohashi/src/github.com/junkpiano/Scientist/Sources/Scientist/Error.swift",
+      "file": "/Users/yusuke/src/github.com/junkpiano/Scientist/Sources/Scientist/Error.swift",
       "line": 12,
       "symbol": "ExperimentError.behaviorNotFound",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yusuke.a.ohashi/src/github.com/junkpiano/Scientist/Sources/Scientist/Error.swift",
+      "file": "/Users/yusuke/src/github.com/junkpiano/Scientist/Sources/Scientist/Error.swift",
       "line": 13,
       "symbol": "ExperimentError.valueNotReturned",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yusuke.a.ohashi/src/github.com/junkpiano/Scientist/Sources/Scientist/Error.swift",
+      "file": "/Users/yusuke/src/github.com/junkpiano/Scientist/Sources/Scientist/Error.swift",
       "line": 14,
       "symbol": "ExperimentError.unknownError",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yusuke.a.ohashi/src/github.com/junkpiano/Scientist/Sources/Scientist/Experiment.swift",
+      "file": "/Users/yusuke/src/github.com/junkpiano/Scientist/Sources/Scientist/Experiment.swift",
       "line": 13,
       "symbol": "Experiment.ExperimentBlock",
       "symbol_kind": "source.lang.swift.decl.typealias",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yusuke.a.ohashi/src/github.com/junkpiano/Scientist/Sources/Scientist/Experiment.swift",
+      "file": "/Users/yusuke/src/github.com/junkpiano/Scientist/Sources/Scientist/Experiment.swift",
       "line": 14,
       "symbol": "Experiment.ComparatorBlock",
       "symbol_kind": "source.lang.swift.decl.typealias",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yusuke.a.ohashi/src/github.com/junkpiano/Scientist/Sources/Scientist/Experiment.swift",
+      "file": "/Users/yusuke/src/github.com/junkpiano/Scientist/Sources/Scientist/Experiment.swift",
       "line": 19,
       "symbol": "Experiment.enabled",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yusuke.a.ohashi/src/github.com/junkpiano/Scientist/Sources/Scientist/Experiment.swift",
+      "file": "/Users/yusuke/src/github.com/junkpiano/Scientist/Sources/Scientist/Experiment.swift",
       "line": 20,
       "symbol": "Experiment.context",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yusuke.a.ohashi/src/github.com/junkpiano/Scientist/Sources/Scientist/Experiment.swift",
+      "file": "/Users/yusuke/src/github.com/junkpiano/Scientist/Sources/Scientist/Experiment.swift",
       "line": 21,
       "symbol": "Experiment.publish",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yusuke.a.ohashi/src/github.com/junkpiano/Scientist/Sources/Scientist/Experiment.swift",
+      "file": "/Users/yusuke/src/github.com/junkpiano/Scientist/Sources/Scientist/Experiment.swift",
       "line": 23,
       "symbol": "Experiment.name",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yusuke.a.ohashi/src/github.com/junkpiano/Scientist/Sources/Scientist/Experiment.swift",
+      "file": "/Users/yusuke/src/github.com/junkpiano/Scientist/Sources/Scientist/Experiment.swift",
       "line": 29,
       "symbol": "Experiment.use(control:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yusuke.a.ohashi/src/github.com/junkpiano/Scientist/Sources/Scientist/Experiment.swift",
+      "file": "/Users/yusuke/src/github.com/junkpiano/Scientist/Sources/Scientist/Experiment.swift",
       "line": 33,
       "symbol": "Experiment.tryNew(name:candidate:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yusuke.a.ohashi/src/github.com/junkpiano/Scientist/Sources/Scientist/Experiment.swift",
+      "file": "/Users/yusuke/src/github.com/junkpiano/Scientist/Sources/Scientist/Experiment.swift",
       "line": 38,
       "symbol": "Experiment.ignores(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yusuke.a.ohashi/src/github.com/junkpiano/Scientist/Sources/Scientist/Experiment.swift",
+      "file": "/Users/yusuke/src/github.com/junkpiano/Scientist/Sources/Scientist/Experiment.swift",
       "line": 42,
       "symbol": "Experiment.compare(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yusuke.a.ohashi/src/github.com/junkpiano/Scientist/Sources/Scientist/Experiment.swift",
+      "file": "/Users/yusuke/src/github.com/junkpiano/Scientist/Sources/Scientist/Experiment.swift",
       "line": 46,
       "symbol": "Experiment.run(name:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yusuke.a.ohashi/src/github.com/junkpiano/Scientist/Sources/Scientist/Observation.swift",
+      "file": "/Users/yusuke/src/github.com/junkpiano/Scientist/Sources/Scientist/Observation.swift",
       "line": 11,
       "symbol": "Observation",
       "symbol_kind": "source.lang.swift.decl.struct",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yusuke.a.ohashi/src/github.com/junkpiano/Scientist/Sources/Scientist/Observation.swift",
+      "file": "/Users/yusuke/src/github.com/junkpiano/Scientist/Sources/Scientist/Observation.swift",
       "line": 12,
       "symbol": "Observation.now",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yusuke.a.ohashi/src/github.com/junkpiano/Scientist/Sources/Scientist/Observation.swift",
+      "file": "/Users/yusuke/src/github.com/junkpiano/Scientist/Sources/Scientist/Observation.swift",
       "line": 13,
       "symbol": "Observation.experiment",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yusuke.a.ohashi/src/github.com/junkpiano/Scientist/Sources/Scientist/Observation.swift",
+      "file": "/Users/yusuke/src/github.com/junkpiano/Scientist/Sources/Scientist/Observation.swift",
       "line": 14,
       "symbol": "Observation.name",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yusuke.a.ohashi/src/github.com/junkpiano/Scientist/Sources/Scientist/Observation.swift",
+      "file": "/Users/yusuke/src/github.com/junkpiano/Scientist/Sources/Scientist/Observation.swift",
       "line": 15,
       "symbol": "Observation.value",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yusuke.a.ohashi/src/github.com/junkpiano/Scientist/Sources/Scientist/Observation.swift",
+      "file": "/Users/yusuke/src/github.com/junkpiano/Scientist/Sources/Scientist/Observation.swift",
       "line": 16,
       "symbol": "Observation.during",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yusuke.a.ohashi/src/github.com/junkpiano/Scientist/Sources/Scientist/Result.swift",
+      "file": "/Users/yusuke/src/github.com/junkpiano/Scientist/Sources/Scientist/Result.swift",
       "line": 30,
       "symbol": "Result.ignores",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yusuke.a.ohashi/src/github.com/junkpiano/Scientist/Sources/Scientist/Result.swift",
+      "file": "/Users/yusuke/src/github.com/junkpiano/Scientist/Sources/Scientist/Result.swift",
       "line": 32,
       "symbol": "Result.mismatched()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yusuke.a.ohashi/src/github.com/junkpiano/Scientist/Sources/Scientist/Result.swift",
+      "file": "/Users/yusuke/src/github.com/junkpiano/Scientist/Sources/Scientist/Result.swift",
       "line": 36,
       "symbol": "Result.ignored()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/yusuke.a.ohashi/src/github.com/junkpiano/Scientist/Sources/Scientist/Result.swift",
+      "file": "/Users/yusuke/src/github.com/junkpiano/Scientist/Sources/Scientist/Result.swift",
       "line": 40,
       "symbol": "Result.matched()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     }
   ],
-  "source_directory": "/Users/yusuke.a.ohashi/src/github.com/junkpiano/Scientist"
+  "source_directory": "/Users/yusuke/src/github.com/junkpiano/Scientist"
 }
