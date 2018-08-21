@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'Scientist'
-  spec.version      = '0.2.0'
+  spec.version      = '0.2.1'
   spec.license      = { :type => 'MIT' }
   spec.homepage     = 'https://github.com/junkpiano/scientist'
   spec.authors      = { 'Yusuke Ohashi' => 'steveohashi@gmail.com' }

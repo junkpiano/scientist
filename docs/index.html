@@ -13,7 +13,7 @@
     <a title="Scientist  Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="index.html">Scientist Docs</a> (30% documented)</p>
+        <p><a href="index.html">Scientist Docs</a> (28% documented)</p>
         <p class="header-right"><a href="https://github.com/junkpiano/scientist"><img src="img/gh.png"/>View on GitHub</a></p>
       </div>
     </header>
@@ -65,22 +65,24 @@
             
             <h1 id='scientist' class='heading'>Scientist</h1>
 
-<p><a href="https://travis-ci.org/junkpiano/scientist"><img src="https://travis-ci.org/junkpiano/scientist.svg?branch=master" alt="Build Status"></a>
+<p><a href="https://cocoapods.org/pods/Scientist"><img src="https://img.shields.io/cocoapods/v/Scientist.svg" alt="CocoaPods"></a>
+<a href="https://github.com/Carthage/Carthage"><img src="https://img.shields.io/badge/Carthage-compatible-brightgreen.svg" alt="Carthage"></a>
+<a href="https://travis-ci.org/junkpiano/scientist"><img src="https://travis-ci.org/junkpiano/scientist.svg?branch=master" alt="Build Status"></a>
 <a href="https://codecov.io/gh/junkpiano/scientist"><img src="https://codecov.io/gh/junkpiano/scientist/branch/master/graph/badge.svg" alt="codecov"></a>
 <a href="https://junkpiano.github.io/scientist/"><img src="https://raw.githubusercontent.com/junkpiano/scientist/master/docs/badge.svg?sanitize=true" alt="Documentation"></a></p>
 
 <p>A Swift library for carefully refactoring critical paths.</p>
 <h2 id='installation' class='heading'>Installation</h2>
 <h3 id='cocoapods' class='heading'>Cocoapods</h3>
-<pre class="highlight plaintext"><code>pod 'Scientist', '~&gt; 0.2.0'
+<pre class="highlight plaintext"><code>pod 'Scientist', '~&gt; 0.2.1'
 </code></pre>
 <h3 id='carthage' class='heading'>Carthage</h3>
-<pre class="highlight plaintext"><code>github "junkpiano/scientist.git" ~&gt; 0.2.0
+<pre class="highlight plaintext"><code>github "junkpiano/scientist" ~&gt; 0.2.1
 </code></pre>
 <h3 id='swift-package-manager' class='heading'>Swift Package Manager</h3>
 <pre class="highlight plaintext"><code>(snip)
 dependencies: [
-    .package(url: "https://github.com/junkpiano/scientist.git", from: "0.2.0")
+    .package(url: "https://github.com/junkpiano/scientist.git", from: "0.2.1")
 ]
 (snip)
 </code></pre>
@@ -118,8 +120,9 @@ dependencies: [
 
 <p>Full Documentation is available <a href="https://junkpiano.github.io/scientist/">Here</a>.</p>
 <h2 id='development' class='heading'>Development</h2>
-<pre class="highlight plaintext"><code>swift package generate-xcodeproj
-open Scientist.xcodeproj
+
+<p>Simply,</p>
+<pre class="highlight plaintext"><code>open Scientist.xcodeproj
 </code></pre>
 
 <p>please run test before you send pull request</p>

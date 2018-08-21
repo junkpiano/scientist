@@ -1,5 +1,7 @@
 # Scientist
 
+[![CocoaPods](https://img.shields.io/cocoapods/v/Scientist.svg)](https://cocoapods.org/pods/Scientist)
+[![Carthage](https://img.shields.io/badge/Carthage-compatible-brightgreen.svg)](https://github.com/Carthage/Carthage)
 [![Build Status](https://travis-ci.org/junkpiano/scientist.svg?branch=master)](https://travis-ci.org/junkpiano/scientist)
 [![codecov](https://codecov.io/gh/junkpiano/scientist/branch/master/graph/badge.svg)](https://codecov.io/gh/junkpiano/scientist)
 [![Documentation](https://raw.githubusercontent.com/junkpiano/scientist/master/docs/badge.svg?sanitize=true)](https://junkpiano.github.io/scientist/)
@@ -10,17 +12,17 @@ A Swift library for carefully refactoring critical paths.
 
 ### Cocoapods
 
-    pod 'Scientist', '~> 0.2.0'
+    pod 'Scientist', '~> 0.2.1'
 
 ### Carthage
 
-    github "junkpiano/scientist.git" ~> 0.2.0
+    github "junkpiano/scientist" ~> 0.2.1
 
 ### Swift Package Manager
 
     (snip)
     dependencies: [
-    	.package(url: "https://github.com/junkpiano/scientist.git", from: "0.2.0")
+    	.package(url: "https://github.com/junkpiano/scientist.git", from: "0.2.1")
     ]
     (snip)
 
@@ -60,7 +62,8 @@ Full Documentation is available [Here](https://junkpiano.github.io/scientist/).
 
 ## Development
 
-    swift package generate-xcodeproj
+Simply,
+
     open Scientist.xcodeproj
 
 please run test before you send pull request
