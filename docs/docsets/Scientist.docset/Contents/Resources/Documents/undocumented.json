@@ -177,8 +177,15 @@
     },
     {
       "file": "/Users/yusuke/src/github.com/junkpiano/Scientist/Sources/Scientist/Scientist.swift",
-      "line": 14,
+      "line": 16,
       "symbol": "Scientist.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/yusuke/src/github.com/junkpiano/Scientist/Sources/Scientist/Scientist.swift",
+      "line": 20,
+      "symbol": "Scientist.init(with:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     }

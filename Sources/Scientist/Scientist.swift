@@ -16,7 +16,7 @@ public struct Scientist<T: Equatable> {
     public init() {
         self.init(with: nil)
     }
-    
+
     public init(with context: [String: Any]? = nil) {
         defaultScientistContext = context ?? [:]
 	}
