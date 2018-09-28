@@ -55,13 +55,12 @@ class ScientistTests: XCTestCase {
                 experiment.publish = {
                     result in
                     XCTAssert(result.mismatches.count == 0)
-//                    XCTAssert(result.mismatches[0].value == "")
                 }
 
                 XCTAssertTrue(experiment.name == "CompareWithNil")
 
                 experiment.tryNew(candidate: { () -> String in
-                    return ""
+                    return "esttest"
                 })
 
                 experiment.use(control: { () -> String in
@@ -91,7 +90,7 @@ class ScientistTests: XCTestCase {
                 XCTAssertTrue(experiment.name == "test")
 
                 experiment.tryNew(candidate: { () -> Bool in
-                    return false
+                    return true
                 })
 
                 experiment.use(control: { () -> Bool in
@@ -113,13 +112,12 @@ class ScientistTests: XCTestCase {
 
     func overrideExpParams(experiment: Experiment<Bool>) {
         experiment.enabled = {
-            // you can randomize experiment.
-            // if you return true, it will trigger experiment.
-            return Int(arc4random_uniform(6) + 1) % 3 == 0
+            return true
         }
 
         experiment.publish = {
             result in
+
             debugPrint(result.mismatches)
         }
     }

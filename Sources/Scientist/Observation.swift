@@ -13,14 +13,18 @@ public struct Observation<T: Equatable> {
     public var experiment: Experiment<T>
     public var name: String
     public var value: T
-    public var during: Int?
+    public var during: Double
 
     init(name: String, experiment: Experiment<T>, block: Experiment<T>.ExperimentBlock) {
         self.name = name
         self.experiment = experiment
+
         now = Date()
+        let start = DispatchTime.now()
         value = block()
-        during = Calendar.current.dateComponents([.nanosecond], from: now, to: Date()).nanosecond
+        let end = DispatchTime.now()
+
+        during = Double(end.uptimeNanoseconds - start.uptimeNanoseconds)/1000000.0
     }
 
     func equivalentTo(other: Observation<T>, comparator: Experiment<T>.ComparatorBlock?) -> Bool {
