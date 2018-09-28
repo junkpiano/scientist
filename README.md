@@ -12,17 +12,17 @@ A Swift library for carefully refactoring critical paths.
 
 ### Cocoapods
 
-    pod 'Scientist', '~> 0.2.1'
+    pod 'Scientist', '~> 0.3.0'
 
 ### Carthage
 
-    github "junkpiano/scientist" ~> 0.2.1
+    github "junkpiano/scientist" ~> 0.3.0
 
 ### Swift Package Manager
 
     (snip)
     dependencies: [
-    	.package(url: "https://github.com/junkpiano/scientist.git", from: "0.2.1")
+    	.package(url: "https://github.com/junkpiano/scientist.git", from: "0.3.0")
     ]
     (snip)
 
