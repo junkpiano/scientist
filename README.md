@@ -12,18 +12,18 @@ A Swift library for carefully refactoring critical paths.
 
 ### Cocoapods
 
-    pod 'Scientist', '~> 0.3.0'
+`pod 'Scientist', '~> 0.3.0'`
 
 ### Carthage
 
-    github "junkpiano/scientist" ~> 0.3.0
+`github "junkpiano/scientist" ~> 0.3.0`
 
 ### Swift Package Manager
 
 ```swift
-    dependencies: [
-    	.package(url: "https://github.com/junkpiano/scientist.git", from: "0.3.0")
-    ]
+dependencies: [
+    .package(url: "https://github.com/junkpiano/scientist.git", from: "0.3.0")
+]
 ```
 
 ## Usage
@@ -66,11 +66,11 @@ Full Documentation is available [Here](https://junkpiano.github.io/scientist/).
 
 Simply,
 
-    `open Scientist.xcodeproj`
+`open Scientist.xcodeproj`
 
 please run test before you send pull request
 
-    `swift test`
+`swift test`
 
 ## Porting from
 
