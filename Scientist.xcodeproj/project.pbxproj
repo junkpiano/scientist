@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXAggregateTarget section */
-		Scientist::ScientistPackageTests::ProductTarget /* ScientistPackageTests */ = {
+		"Scientist::ScientistPackageTests::ProductTarget" /* ScientistPackageTests */ = {
 			isa = PBXAggregateTarget;
 			buildConfigurationList = OBJ_41 /* Build configuration list for PBXAggregateTarget "ScientistPackageTests" */;
 			buildPhases = (
@@ -29,7 +29,7 @@
 		OBJ_32 /* Scientist.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_14 /* Scientist.swift */; };
 		OBJ_39 /* Package.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_6 /* Package.swift */; };
 		OBJ_50 /* ScientistTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_17 /* ScientistTests.swift */; };
-		OBJ_52 /* Scientist.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = Scientist::Scientist::Product /* Scientist.framework */; };
+		OBJ_52 /* Scientist.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "Scientist::Scientist::Product" /* Scientist.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,8 +59,8 @@
 		OBJ_18 /* fastlane */ = {isa = PBXFileReference; lastKnownFileType = folder; path = fastlane; sourceTree = SOURCE_ROOT; };
 		OBJ_6 /* Package.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		OBJ_9 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
-		Scientist::Scientist::Product /* Scientist.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Scientist.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		Scientist::ScientistTests::Product /* ScientistTests.xctest */ = {isa = PBXFileReference; lastKnownFileType = file; path = ScientistTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		"Scientist::Scientist::Product" /* Scientist.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Scientist.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		"Scientist::ScientistTests::Product" /* ScientistTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; path = ScientistTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,8 +102,8 @@
 		OBJ_19 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				Scientist::Scientist::Product /* Scientist.framework */,
-				Scientist::ScientistTests::Product /* ScientistTests.xctest */,
+				"Scientist::Scientist::Product" /* Scientist.framework */,
+				"Scientist::ScientistTests::Product" /* ScientistTests.xctest */,
 			);
 			name = Products;
 			sourceTree = BUILT_PRODUCTS_DIR;
@@ -117,7 +117,6 @@
 				OBJ_18 /* fastlane */,
 				OBJ_19 /* Products */,
 			);
-			name = "";
 			sourceTree = "<group>";
 		};
 		OBJ_7 /* Sources */ = {
@@ -145,7 +144,7 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		Scientist::Scientist /* Scientist */ = {
+		"Scientist::Scientist" /* Scientist */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = OBJ_23 /* Build configuration list for PBXNativeTarget "Scientist" */;
 			buildPhases = (
@@ -158,10 +157,10 @@
 			);
 			name = Scientist;
 			productName = Scientist;
-			productReference = Scientist::Scientist::Product /* Scientist.framework */;
+			productReference = "Scientist::Scientist::Product" /* Scientist.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		Scientist::ScientistTests /* ScientistTests */ = {
+		"Scientist::ScientistTests" /* ScientistTests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = OBJ_46 /* Build configuration list for PBXNativeTarget "ScientistTests" */;
 			buildPhases = (
@@ -175,10 +174,10 @@
 			);
 			name = ScientistTests;
 			productName = ScientistTests;
-			productReference = Scientist::ScientistTests::Product /* ScientistTests.xctest */;
+			productReference = "Scientist::ScientistTests::Product" /* ScientistTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		Scientist::SwiftPMPackageDescription /* ScientistPackageDescription */ = {
+		"Scientist::SwiftPMPackageDescription" /* ScientistPackageDescription */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = OBJ_35 /* Build configuration list for PBXNativeTarget "ScientistPackageDescription" */;
 			buildPhases = (
@@ -199,12 +198,18 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 9999;
+				TargetAttributes = {
+					"Scientist::ScientistTests" = {
+						LastSwiftMigration = 1310;
+					};
+				};
 			};
 			buildConfigurationList = OBJ_2 /* Build configuration list for PBXProject "Scientist" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = OBJ_5;
@@ -212,10 +217,10 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				Scientist::Scientist /* Scientist */,
-				Scientist::SwiftPMPackageDescription /* ScientistPackageDescription */,
-				Scientist::ScientistPackageTests::ProductTarget /* ScientistPackageTests */,
-				Scientist::ScientistTests /* ScientistTests */,
+				"Scientist::Scientist" /* Scientist */,
+				"Scientist::SwiftPMPackageDescription" /* ScientistPackageDescription */,
+				"Scientist::ScientistPackageTests::ProductTarget" /* ScientistPackageTests */,
+				"Scientist::ScientistTests" /* ScientistTests */,
 			);
 		};
 /* End PBXProject section */
@@ -255,12 +260,12 @@
 /* Begin PBXTargetDependency section */
 		OBJ_44 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = Scientist::ScientistTests /* ScientistTests */;
+			target = "Scientist::ScientistTests" /* ScientistTests */;
 			targetProxy = 58E673D6210896B1001AA7DE /* PBXContainerItemProxy */;
 		};
 		OBJ_53 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = Scientist::Scientist /* Scientist */;
+			target = "Scientist::Scientist" /* Scientist */;
 			targetProxy = 58E673D5210896B1001AA7DE /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -284,7 +289,7 @@
 				PRODUCT_MODULE_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 				TARGET_NAME = Scientist;
 			};
 			name = Debug;
@@ -307,7 +312,7 @@
 				PRODUCT_MODULE_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 				TARGET_NAME = Scientist;
 			};
 			name = Release;
@@ -331,6 +336,7 @@
 				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator appletvos appletvsimulator watchos watchsimulator";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = SWIFT_PACKAGE;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				USE_HEADERMAP = NO;
 			};
 			name = Debug;
@@ -339,8 +345,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				LD = /usr/bin/true;
-				OTHER_SWIFT_FLAGS = "-swift-version 4 -I $(TOOLCHAIN_DIR)/usr/lib/swift/pm/4 -target x86_64-apple-macosx10.10 -sdk /Applications/Xcode-9.4.1.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk";
-				SWIFT_VERSION = 4.0;
+				OTHER_SWIFT_FLAGS = "-swift-version 5 -I $(TOOLCHAIN_DIR)/usr/lib/swift/pm/4 -target x86_64-apple-macosx10.10 -sdk /Applications/Xcode-9.4.1.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -348,8 +354,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				LD = /usr/bin/true;
-				OTHER_SWIFT_FLAGS = "-swift-version 4 -I $(TOOLCHAIN_DIR)/usr/lib/swift/pm/4 -target x86_64-apple-macosx10.10 -sdk /Applications/Xcode-9.4.1.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk";
-				SWIFT_VERSION = 4.0;
+				OTHER_SWIFT_FLAGS = "-swift-version 5 -I $(TOOLCHAIN_DIR)/usr/lib/swift/pm/4 -target x86_64-apple-macosx10.10 -sdk /Applications/Xcode-9.4.1.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -370,6 +376,7 @@
 				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator appletvos appletvsimulator watchos watchsimulator";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = SWIFT_PACKAGE;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 5.0;
 				USE_HEADERMAP = NO;
 			};
 			name = Release;
@@ -400,7 +407,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				OTHER_LDFLAGS = "$(inherited)";
 				OTHER_SWIFT_FLAGS = "$(inherited)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 				TARGET_NAME = ScientistTests;
 			};
 			name = Debug;
@@ -419,7 +426,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				OTHER_LDFLAGS = "$(inherited)";
 				OTHER_SWIFT_FLAGS = "$(inherited)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 				TARGET_NAME = ScientistTests;
 			};
 			name = Release;

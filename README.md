@@ -20,14 +20,15 @@ A Swift library for carefully refactoring critical paths.
 
 ### Swift Package Manager
 
-    (snip)
+```swift
     dependencies: [
     	.package(url: "https://github.com/junkpiano/scientist.git", from: "0.3.0")
     ]
-    (snip)
+```
 
 ## Usage
 
+```swift
     func allow(user: User) -> Bool {
       do {
         return try Scienctist<Bool>().science({
@@ -57,6 +58,7 @@ A Swift library for carefully refactoring critical paths.
         return false
       }
     }
+```
 
 Full Documentation is available [Here](https://junkpiano.github.io/scientist/).
 
@@ -64,11 +66,11 @@ Full Documentation is available [Here](https://junkpiano.github.io/scientist/).
 
 Simply,
 
-    open Scientist.xcodeproj
+    `open Scientist.xcodeproj`
 
 please run test before you send pull request
 
-    swift test
+    `swift test`
 
 ## Porting from
 
