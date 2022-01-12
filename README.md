@@ -12,22 +12,23 @@ A Swift library for carefully refactoring critical paths.
 
 ### Cocoapods
 
-    pod 'Scientist', '~> 0.3.0'
+`pod 'Scientist', '~> 0.3.0'`
 
 ### Carthage
 
-    github "junkpiano/scientist" ~> 0.3.0
+`github "junkpiano/scientist" ~> 0.3.0`
 
 ### Swift Package Manager
 
-    (snip)
-    dependencies: [
-    	.package(url: "https://github.com/junkpiano/scientist.git", from: "0.3.0")
-    ]
-    (snip)
+```swift
+dependencies: [
+    .package(url: "https://github.com/junkpiano/scientist.git", from: "0.3.0")
+]
+```
 
 ## Usage
 
+```swift
     func allow(user: User) -> Bool {
       do {
         return try Scienctist<Bool>().science({
@@ -57,6 +58,7 @@ A Swift library for carefully refactoring critical paths.
         return false
       }
     }
+```
 
 Full Documentation is available [Here](https://junkpiano.github.io/scientist/).
 
@@ -64,11 +66,11 @@ Full Documentation is available [Here](https://junkpiano.github.io/scientist/).
 
 Simply,
 
-    open Scientist.xcodeproj
+`open Scientist.xcodeproj`
 
 please run test before you send pull request
 
-    swift test
+`swift test`
 
 ## Porting from
 
