@@ -18,9 +18,16 @@ default_platform(:ios)
 platform :ios do
   desc "Description of what the lane does"
   lane :test do
+    spm(
+      command: "generate-xcodeproj"
+    )
+    
     scan(
       code_coverage: true
       )
+    
     slather if is_ci?
+
+    pod_lib_lint(allow_warnings: true)
   end
 end
