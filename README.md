@@ -4,7 +4,6 @@
 [![Carthage](https://img.shields.io/badge/Carthage-compatible-brightgreen.svg)](https://github.com/Carthage/Carthage)
 [![Build Status](https://travis-ci.org/junkpiano/scientist.svg?branch=master)](https://travis-ci.org/junkpiano/scientist)
 [![codecov](https://codecov.io/gh/junkpiano/scientist/branch/master/graph/badge.svg)](https://codecov.io/gh/junkpiano/scientist)
-[![Documentation](https://raw.githubusercontent.com/junkpiano/scientist/master/docs/badge.svg?sanitize=true)](https://junkpiano.github.io/scientist/)
 
 A Swift library for carefully refactoring critical paths.
 

@@ -8,20 +8,28 @@
     <script src="../js/jquery.min.js" defer></script>
     <script src="../js/jazzy.js" defer></script>
     
+    <script src="../js/lunr.min.js" defer></script>
+    <script src="../js/typeahead.jquery.js" defer></script>
+    <script src="../js/jazzy.search.js" defer></script>
   </head>
   <body>
     <a name="//apple_ref/swift/Struct/Scientist" class="dashAnchor"></a>
     <a title="Scientist Structure Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">Scientist Docs</a> (28% documented)</p>
-        <p class="header-right"><a href="https://github.com/junkpiano/scientist"><img src="../img/gh.png"/>View on GitHub</a></p>
+        <p><a href="../index.html">Scientist 0.4.0 Docs</a> (28% documented)</p>
+        <p class="header-right"><a href="https://github.com/junkpiano/scientist"><img src="../img/gh.png" alt="GitHub"/>View on GitHub</a></p>
+        <div class="header-right">
+          <form role="search" action="../search.json">
+            <input type="text" placeholder="Search documentation" data-typeahead>
+          </form>
+        </div>
       </div>
     </header>
     <div class="content-wrapper">
       <p id="breadcrumbs">
         <a href="../index.html">Scientist Reference</a>
-        <img id="carat" src="../img/carat.png" />
+        <img id="carat" src="../img/carat.png" alt=""/>
         Scientist Structure Reference
       </p>
     </div>
@@ -66,6 +74,7 @@
             <h1>Scientist</h1>
               <div class="declaration">
                 <div class="language">
+                  
                   <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Scientist</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span> <span class="k">where</span> <span class="kt">T</span> <span class="p">:</span> <span class="kt">Equatable</span></code></pre>
 
                 </div>
@@ -107,9 +116,9 @@ You have to specify return type which is <code>Equatable</code>.</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:9ScientistAAVAByxGs10DictionaryVySSypGSg4with_tcfc"></a>
+                    <a name="/s:9ScientistAAV4withAByxGSDySSypGSg_tcfc"></a>
                     <a name="//apple_ref/swift/Method/init(with:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:9ScientistAAVAByxGs10DictionaryVySSypGSg4with_tcfc">init(with:)</a>
+                    <a class="token" href="#/s:9ScientistAAV4withAByxGSDySSypGSg_tcfc">init(with:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -124,7 +133,7 @@ You have to specify return type which is <code>Equatable</code>.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="n">with</span> <span class="nv">context</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">Any</span><span class="p">]?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="n">with</span> <span class="nv">context</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span> <span class="p">:</span> <span class="kt">Any</span><span class="p">]?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -134,9 +143,9 @@ You have to specify return type which is <code>Equatable</code>.</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:9ScientistAAV7sciencexSS4name_s10DictionaryVySSypG7optionsyAA10ExperimentCyxGctKF"></a>
+                    <a name="/s:9ScientistAAV7science4name7options_xSS_SDySSypGyAA10ExperimentCyxGXEtKF"></a>
                     <a name="//apple_ref/swift/Method/science(name:options:_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:9ScientistAAV7sciencexSS4name_s10DictionaryVySSypG7optionsyAA10ExperimentCyxGctKF">science(name:options:_:)</a>
+                    <a class="token" href="#/s:9ScientistAAV7science4name7options_xSS_SDySSypGyAA10ExperimentCyxGXEtKF">science(name:<wbr>options:<wbr>_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -151,7 +160,7 @@ You have to specify return type which is <code>Equatable</code>.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">science</span><span class="p">(</span><span class="nv">name</span><span class="p">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="s">""</span><span class="p">,</span> <span class="nv">options</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">[:],</span> <span class="n">_</span> <span class="nv">process</span><span class="p">:</span> <span class="p">(</span><span class="kt"><a href="../Classes/Experiment.html">Experiment</a></span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">T</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">science</span><span class="p">(</span><span class="nv">name</span><span class="p">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="s">""</span><span class="p">,</span> <span class="nv">options</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span> <span class="p">:</span> <span class="kt">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">[:],</span> <span class="n">_</span> <span class="nv">process</span><span class="p">:</span> <span class="p">(</span><span class="kt"><a href="../Classes/Experiment.html">Experiment</a></span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">T</span></code></pre>
 
                         </div>
                       </div>
@@ -208,9 +217,9 @@ You have to specify return type which is <code>Equatable</code>.</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:9ScientistAAV3runxSS4name_s10DictionaryVySSypG7optionsyAA10ExperimentCyxGctKFZ"></a>
+                    <a name="/s:9ScientistAAV3run4name7options_xSS_SDySSypGyAA10ExperimentCyxGXEtKFZ"></a>
                     <a name="//apple_ref/swift/Method/run(name:options:_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:9ScientistAAV3runxSS4name_s10DictionaryVySSypG7optionsyAA10ExperimentCyxGctKFZ">run(name:options:_:)</a>
+                    <a class="token" href="#/s:9ScientistAAV3run4name7options_xSS_SDySSypGyAA10ExperimentCyxGXEtKFZ">run(name:<wbr>options:<wbr>_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -225,7 +234,7 @@ You have to specify return type which is <code>Equatable</code>.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">run</span><span class="p">(</span><span class="nv">name</span><span class="p">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="s">""</span><span class="p">,</span> <span class="nv">options</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">[:],</span> <span class="n">_</span> <span class="nv">process</span><span class="p">:</span> <span class="p">(</span><span class="kt"><a href="../Classes/Experiment.html">Experiment</a></span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">T</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">run</span><span class="p">(</span><span class="nv">name</span><span class="p">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="s">""</span><span class="p">,</span> <span class="nv">options</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span> <span class="p">:</span> <span class="kt">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">[:],</span> <span class="n">_</span> <span class="nv">process</span><span class="p">:</span> <span class="p">(</span><span class="kt"><a href="../Classes/Experiment.html">Experiment</a></span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">T</span></code></pre>
 
                         </div>
                       </div>
@@ -284,11 +293,10 @@ You have to specify return type which is <code>Equatable</code>.</p>
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2018 <a class="link" href="https://github.com/junkpiano/scientist" target="_blank" rel="external">Yusuke Ohashi</a>. All rights reserved. (Last updated: 2018-09-29)</p>
-          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+          <p>&copy; 2022 <a class="link" href="https://github.com/junkpiano/scientist" target="_blank" rel="external noopener">Yusuke Ohashi</a>. All rights reserved. (Last updated: 2022-01-13)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
     </div>
   </body>
-</div>
 </html>
