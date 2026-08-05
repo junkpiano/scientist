@@ -1,6 +1,5 @@
 # Scientist
 
-[![CocoaPods](https://img.shields.io/cocoapods/v/Scientist.svg)](https://cocoapods.org/pods/Scientist)
 [![Carthage](https://img.shields.io/badge/Carthage-compatible-brightgreen.svg)](https://github.com/Carthage/Carthage)
 [![CI](https://github.com/junkpiano/scientist/actions/workflows/ci.yml/badge.svg)](https://github.com/junkpiano/scientist/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/junkpiano/scientist/branch/master/graph/badge.svg)](https://codecov.io/gh/junkpiano/scientist)
@@ -8,10 +7,6 @@
 A Swift library for carefully refactoring critical paths.
 
 ## Installation
-
-### Cocoapods
-
-`pod 'Scientist', '~> 0.4.0'`
 
 ### Carthage
 
@@ -62,10 +57,6 @@ dependencies: [
 Full Documentation is available [Here](https://junkpiano.github.io/scientist/).
 
 ## Development
-
-Simply,
-
-`open Scientist.xcodeproj`
 
 please run test before you send pull request
 
