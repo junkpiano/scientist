@@ -8,7 +8,7 @@ Pod::Spec.new do |spec|
   spec.source       = { :git => 'https://github.com/junkpiano/scientist.git', :tag => spec.version.to_s }
   spec.source_files = 'Sources/**/*.swift'
 
-  spec.swift_versions = ['5.3', '5.4', '5.5']
+  spec.swift_versions = ['5.3', '5.4', '5.5', '6.0']
   spec.ios.deployment_target  = '10.0'
   spec.osx.deployment_target = '10.12'
   spec.tvos.deployment_target = '10.0'

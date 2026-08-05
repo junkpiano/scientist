@@ -2,7 +2,7 @@
 
 [![CocoaPods](https://img.shields.io/cocoapods/v/Scientist.svg)](https://cocoapods.org/pods/Scientist)
 [![Carthage](https://img.shields.io/badge/Carthage-compatible-brightgreen.svg)](https://github.com/Carthage/Carthage)
-[![Build Status](https://travis-ci.org/junkpiano/scientist.svg?branch=master)](https://travis-ci.org/junkpiano/scientist)
+[![CI](https://github.com/junkpiano/scientist/actions/workflows/ci.yml/badge.svg)](https://github.com/junkpiano/scientist/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/junkpiano/scientist/branch/master/graph/badge.svg)](https://codecov.io/gh/junkpiano/scientist)
 
 A Swift library for carefully refactoring critical paths.
