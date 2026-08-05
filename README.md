@@ -1,16 +1,11 @@
 # Scientist
 
-[![Carthage](https://img.shields.io/badge/Carthage-compatible-brightgreen.svg)](https://github.com/Carthage/Carthage)
 [![CI](https://github.com/junkpiano/scientist/actions/workflows/ci.yml/badge.svg)](https://github.com/junkpiano/scientist/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/junkpiano/scientist/branch/master/graph/badge.svg)](https://codecov.io/gh/junkpiano/scientist)
 
 A Swift library for carefully refactoring critical paths.
 
 ## Installation
-
-### Carthage
-
-`github "junkpiano/scientist" ~> 0.4.0`
 
 ### Swift Package Manager
 
