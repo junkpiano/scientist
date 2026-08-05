@@ -9,7 +9,7 @@
 import Foundation
 
 public enum ExperimentError: Error {
-    case behaviorNotFound
-    case valueNotReturned
-    case unknownError
+  case behaviorNotFound
+  case valueNotReturned
+  case unknownError
 }

@@ -15,3 +15,4 @@ jobs:
           xcode-version: latest-stable
       - run: swift build -v
       - run: swift test -v
+      - run: swift format lint -r Sources Tests

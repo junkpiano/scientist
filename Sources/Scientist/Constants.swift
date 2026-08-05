@@ -9,8 +9,8 @@
 import Foundation
 
 struct Constants {
-    static let defaultControlName = "control"
-    static let defaultCandidateName = "candidate"
-    static let defaultExperimentName = "experiment"
-    static let runParameter = "run"
+  static let defaultControlName = "control"
+  static let defaultCandidateName = "candidate"
+  static let defaultExperimentName = "experiment"
+  static let runParameter = "run"
 }

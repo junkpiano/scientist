@@ -21,6 +21,13 @@ Run a single test:
 swift test --filter ScientistTests/testScience
 ```
 
+Lint/format (uses the `swift-format` bundled with the toolchain, configured via `.swift-format`):
+
+```sh
+swift format lint -r Sources Tests
+swift format format -i -r Sources Tests
+```
+
 Ruby tooling (danger, jazzy) is pinned via `mise` (`.ruby-version` / `mise.toml`, Ruby 3.3.12). Install gems with `bundle install` before running them.
 
 Generate docs (jazzy, output goes to `docs/`):
@@ -29,7 +36,7 @@ Generate docs (jazzy, output goes to `docs/`):
 bundle exec jazzy
 ```
 
-CI (`.github/workflows/ci.yml`) runs `swift build`/`swift test` on macOS on every push/PR.
+CI (`.github/workflows/ci.yml`) runs `swift build`/`swift test`/`swift format lint` on macOS on every push/PR.
 
 ## Architecture
 
