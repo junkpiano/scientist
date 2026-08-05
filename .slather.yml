@@ -1,7 +1,0 @@
-coverage_service: cobertura_xml
-xcodeproj: Scientist.xcodeproj
-scheme: Scientist-Package
-binary_basename: Scientist
-output_directory: fastlane/test_output/cobertura.xml
-ignore:
-  - Tests/*
