@@ -88,9 +88,11 @@ Two things worth knowing before reading anything into the numbers:
 - This is not a benchmark harness. Each behavior runs once per experiment, in-process and
   in sequence, with no warmup, so a single `during` is mostly noise. The signal is in
   aggregating many runs over the inputs the code actually sees.
-- A candidate that traps takes the process down with it. `ExperimentBlock` cannot throw,
-  so an implementation you do not trust yet needs to handle its own failures inside the
-  block.
+- A candidate that throws is recorded rather than propagated: its `Observation` carries
+  the error and reports `raised`, and only the control's error reaches the caller. Two
+  behaviors that threw the same error count as a match. A candidate that *traps* — a force
+  unwrap, a failed precondition — still takes the process down, since a trap is not a
+  catchable error.
 
 ## Development
 

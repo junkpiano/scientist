@@ -14,17 +14,27 @@
 /// ``use(control:)``, each new one with ``tryNew(name:candidate:)``, and set ``enabled``
 /// to decide whether the candidates run at all.
 ///
-/// Whatever the candidates return, ``run(name:)`` returns the value of the behavior it
-/// ran as the control — by default the one registered with ``use(control:)`` — so putting
-/// a code path under experiment does not change what the caller sees.
+/// Whatever the candidates do, ``run(name:)`` returns the value of the behavior it ran as
+/// the control — by default the one registered with ``use(control:)`` — so putting a code
+/// path under experiment does not change what the caller sees. A candidate that throws is
+/// recorded in its ``Observation`` rather than propagated.
 final public class Experiment<T: Equatable> {
   /// A behavior under experiment: either the control or a candidate.
-  public typealias ExperimentBlock = () -> T
+  ///
+  /// A block that throws is recorded as having thrown. Only the control's error reaches
+  /// the caller; a candidate's is captured in its ``Observation``.
+  public typealias ExperimentBlock = () throws -> T
 
   /// Decides whether a candidate's value is equivalent to the control's.
   ///
   /// Used in place of `==` when one is registered with ``compare(_:)``.
   public typealias ComparatorBlock = (_ control: T, _ candidate: T) -> Bool
+
+  /// Decides whether the error a candidate threw is equivalent to the control's.
+  ///
+  /// Used when one is registered with ``compareErrors(_:)``; otherwise two errors match
+  /// when they are the same type and describe themselves the same way.
+  public typealias ErrorComparatorBlock = (_ control: Error, _ candidate: Error) -> Bool
 
   /// Type of block which define the conditions to ignore comparing observations.
   public typealias IgnoreObservationsBlock = (
@@ -55,6 +65,7 @@ final public class Experiment<T: Equatable> {
 
   private var behaviors: [String: ExperimentBlock] = [:]
   private var comparator: ComparatorBlock?
+  private var errorComparator: ErrorComparatorBlock?
   private var ignoreConditions: [IgnoreObservationsBlock] = []
 
   /// Registers the existing code path, under the name `"control"`.
@@ -103,18 +114,36 @@ final public class Experiment<T: Equatable> {
     comparator = compare
   }
 
+  /// Compares thrown errors with `compare` instead of the default.
+  ///
+  /// Without one, two errors are equivalent when they are the same type and describe
+  /// themselves the same way. Register this when that is too strict — an error carrying a
+  /// timestamp or a request id — or too loose.
+  ///
+  /// An observation that threw is never equivalent to one that returned a value, whatever
+  /// this block says.
+  ///
+  /// - Parameter compare: Returns `true` when the two errors count as equivalent.
+  public func compareErrors(_ compare: @escaping ErrorComparatorBlock) {
+    errorComparator = compare
+  }
+
   /// Runs every registered behavior, publishes the result, and returns the control's
   /// value.
   ///
   /// When ``enabled`` returns `false`, or fewer than two behaviors are registered, only
   /// the named block runs: nothing is compared and ``publish`` is not called.
   ///
+  /// A candidate that throws does not fail the run: its error is recorded in its
+  /// ``Observation`` and compared like any other outcome. Only the control's error
+  /// reaches the caller.
+  ///
   /// - Parameter name: Which behavior to treat as the control, both for comparison and
   ///   for the returned value. Defaults to `"control"`.
   /// - Returns: The value returned by the named behavior.
-  /// - Throws: ``ExperimentError/behaviorNotFound`` if no behavior is registered under
-  ///   `name`, or ``ExperimentError/valueNotReturned`` if the run produced no observation
-  ///   for it.
+  /// - Throws: Whatever the named behavior threw, after the result is published.
+  ///   ``ExperimentError/behaviorNotFound`` if no behavior is registered under `name`, or
+  ///   ``ExperimentError/valueNotReturned`` if the run produced no observation for it.
   public func run(name: String? = nil) throws -> T {
     let executedBehavior: String = name ?? Constants.defaultControlName
 
@@ -123,7 +152,7 @@ final public class Experiment<T: Equatable> {
     }
 
     if shouldExperimentRun == false {
-      return block()
+      return try block()
     }
 
     var observations: [Observation<T>] = []
@@ -142,7 +171,14 @@ final public class Experiment<T: Equatable> {
     publish(result: result)
 
     if let control = control {
-      return control.value
+      // The control's outcome is the caller's outcome, error included. Publishing has
+      // already happened, so a failing control is still recorded before it propagates.
+      if let error = control.error {
+        throw error
+      }
+      if let value = control.value {
+        return value
+      }
     }
 
     throw ExperimentError.valueNotReturned
@@ -153,7 +189,8 @@ final public class Experiment<T: Equatable> {
   }
 
   func observationsAreEquivalent(control: Observation<T>, candidate: Observation<T>) -> Bool {
-    return control.equivalentTo(other: candidate, comparator: comparator)
+    return control.equivalentTo(
+      other: candidate, comparator: comparator, errorComparator: errorComparator)
   }
 
   func ignoresMismatchedObservations(control: Observation<T>, candidate: Observation<T>) -> Bool {

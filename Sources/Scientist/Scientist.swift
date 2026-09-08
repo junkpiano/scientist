@@ -43,8 +43,9 @@ public struct Scientist<T: Equatable> {
   ///     both for comparison and for the returned value.
   ///   - process: Closure that registers the behaviors on the ``Experiment``.
   /// - Returns: The value returned by the control behavior.
-  /// - Throws: ``ExperimentError`` if the requested behavior is missing or produced no
-  ///   value.
+  /// - Throws: Whatever the control behavior threw, or ``ExperimentError`` if the
+  ///   requested behavior is missing or produced no value. A candidate that throws is
+  ///   recorded, not propagated.
   public func science(
     name: String = "", options: [String: Any] = [:], _ process: (Experiment<T>) -> Void
   ) throws -> T {
@@ -64,8 +65,9 @@ public struct Scientist<T: Equatable> {
   ///     both for comparison and for the returned value.
   ///   - process: Closure that registers the behaviors on the ``Experiment``.
   /// - Returns: The value returned by the control behavior.
-  /// - Throws: ``ExperimentError`` if the requested behavior is missing or produced no
-  ///   value.
+  /// - Throws: Whatever the control behavior threw, or ``ExperimentError`` if the
+  ///   requested behavior is missing or produced no value. A candidate that throws is
+  ///   recorded, not propagated.
   public static func run(
     name: String = "", options: [String: Any] = [:], _ process: (Experiment<T>) -> Void
   ) throws -> T {

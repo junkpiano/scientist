@@ -22,10 +22,24 @@ public struct Observation<T: Equatable> {
   /// The name the behavior was registered under, `"control"` by default.
   public var name: String
 
-  /// The value the block returned.
-  public var value: T
+  /// The value the block returned, or `nil` if it threw.
+  public var value: T?
+
+  /// The error the block threw, or `nil` if it returned normally.
+  ///
+  /// A candidate that fails is an outcome worth recording, not a reason to take the
+  /// caller down with it, so the error is captured here instead of propagating. Only the
+  /// control's error reaches the caller, from ``Experiment/run(name:)``.
+  public var error: Error?
+
+  /// Whether the block threw.
+  public var raised: Bool {
+    return error != nil
+  }
 
   /// How long the block took, in milliseconds.
+  ///
+  /// Measured whether the block returned or threw.
   public var during: Double
 
   init(name: String, experiment: Experiment<T>, block: Experiment<T>.ExperimentBlock) {
@@ -34,18 +48,46 @@ public struct Observation<T: Equatable> {
 
     now = Date()
     let start = DispatchTime.now()
-    value = block()
+    do {
+      value = try block()
+    } catch {
+      self.error = error
+    }
     let end = DispatchTime.now()
 
     during = Double(end.uptimeNanoseconds - start.uptimeNanoseconds) / 1000000.0
   }
 
-  func equivalentTo(other: Observation<T>, comparator: Experiment<T>.ComparatorBlock?) -> Bool {
-    if let comparator = comparator {
-      return comparator(value, other.value)
-    } else {
-      return value == other.value
+  func equivalentTo(
+    other: Observation<T>,
+    comparator: Experiment<T>.ComparatorBlock?,
+    errorComparator: Experiment<T>.ErrorComparatorBlock?
+  ) -> Bool {
+    switch (error, other.error) {
+    case (let error?, let otherError?):
+      if let errorComparator = errorComparator {
+        return errorComparator(error, otherError)
+      }
+      return Observation.errorsAreEquivalent(error, otherError)
+    case (nil, nil):
+      guard let value = value, let otherValue = other.value else {
+        return false
+      }
+      if let comparator = comparator {
+        return comparator(value, otherValue)
+      }
+      return value == otherValue
+    default:
+      // One threw and the other did not, which is the mismatch worth knowing about.
+      return false
     }
+  }
+
+  /// Errors are not `Equatable`, so stand in for it the way the Ruby original does: two
+  /// errors match when they are the same type and describe themselves the same way.
+  /// Register ``Experiment/compareErrors(_:)`` for anything more specific.
+  private static func errorsAreEquivalent(_ lhs: Error, _ rhs: Error) -> Bool {
+    return type(of: lhs) == type(of: rhs) && String(describing: lhs) == String(describing: rhs)
   }
 
 }
