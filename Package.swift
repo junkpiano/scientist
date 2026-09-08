@@ -30,3 +30,12 @@ let package = Package(
             dependencies: ["Scientist"])
     ]
 )
+
+// The DocC plugin is only needed to build documentation. Adding it
+// unconditionally would push it into the dependency graph of everyone who
+// depends on Scientist, so it is opt-in via the environment.
+if Context.environment["SCIENTIST_BUILD_DOCC"] != nil {
+    package.dependencies += [
+        .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.0.0")
+    ]
+}
