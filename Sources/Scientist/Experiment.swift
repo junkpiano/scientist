@@ -60,12 +60,23 @@ final public class Experiment<T: Equatable> {
   /// It is not called when the experiment does not run; see ``enabled``.
   public var publish: ((Result<T>) -> Void)?
 
+  /// Turns an unignored mismatch into a thrown error instead of a published one.
+  ///
+  /// Defaults to `false`. Set it in tests, where a mismatch should fail the test rather
+  /// than be recorded and forgotten; leave it alone in production, where the whole point
+  /// is that a mismatch does not disturb the caller.
+  ///
+  /// The result is published before the error is thrown, so a mismatch is still recorded.
+  /// Ignored mismatches do not throw. Register ``raiseWith(_:)`` to choose the error.
+  public var raiseOnMismatches: Bool = false
+
   /// The name this experiment was created with.
   public private(set) var name: String
 
   private var behaviors: [String: ExperimentBlock] = [:]
   private var comparator: ComparatorBlock?
   private var errorComparator: ErrorComparatorBlock?
+  private var mismatchError: ((Result<T>) -> Error)?
   private var ignoreConditions: [IgnoreObservationsBlock] = []
 
   /// Registers the existing code path, under the name `"control"`.
@@ -128,6 +139,16 @@ final public class Experiment<T: Equatable> {
     errorComparator = compare
   }
 
+  /// Chooses the error thrown when ``raiseOnMismatches`` is set and the run mismatched.
+  ///
+  /// Without one, ``MismatchError`` is thrown. Register this to throw something a test
+  /// harness already understands, or to carry more of the run's detail.
+  ///
+  /// - Parameter make: Builds the error from the result that mismatched.
+  public func raiseWith(_ make: @escaping (Result<T>) -> Error) {
+    mismatchError = make
+  }
+
   /// Runs every registered behavior, publishes the result, and returns the control's
   /// value.
   ///
@@ -141,7 +162,8 @@ final public class Experiment<T: Equatable> {
   /// - Parameter name: Which behavior to treat as the control, both for comparison and
   ///   for the returned value. Defaults to `"control"`.
   /// - Returns: The value returned by the named behavior.
-  /// - Throws: Whatever the named behavior threw, after the result is published.
+  /// - Throws: ``MismatchError`` if ``raiseOnMismatches`` is set and the run mismatched,
+  ///   or whatever the named behavior threw, in both cases after the result is published.
   ///   ``ExperimentError/behaviorNotFound`` if no behavior is registered under `name`, or
   ///   ``ExperimentError/valueNotReturned`` if the run produced no observation for it.
   public func run(name: String? = nil) throws -> T {
@@ -169,6 +191,12 @@ final public class Experiment<T: Equatable> {
     let result = Result<T>(experiment: self, observations: observations, control: control)
 
     publish(result: result)
+
+    if raiseOnMismatches && result.mismatched() {
+      // Published above, so the mismatch is recorded either way. This takes precedence
+      // over the control's own error: a mismatching run is the more specific failure.
+      throw mismatchError?(result) ?? MismatchError(result: result)
+    }
 
     if let control = control {
       // The control's outcome is the caller's outcome, error included. Publishing has
