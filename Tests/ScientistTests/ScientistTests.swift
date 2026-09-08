@@ -436,4 +436,119 @@ class ScientistTests: XCTestCase {
       XCTAssertEqual(error as? TestError, .boom)
     }
   }
+
+  // MARK: - Raising on mismatches
+
+  func testRaiseOnMismatchesThrowsAfterPublishing() throws {
+    var result: Result<String>?
+
+    XCTAssertThrowsError(
+      try Scientist<String>().science(name: "raising") { experiment in
+        experiment.enabled = { true }
+        experiment.raiseOnMismatches = true
+        experiment.publish = { result = $0 }
+
+        experiment.use(control: { "control value" })
+        experiment.tryNew(candidate: { "candidate value" })
+      }
+    ) { error in
+      let mismatch = error as? MismatchError
+      XCTAssertEqual(mismatch?.experimentName, "raising")
+      XCTAssertEqual(mismatch?.mismatches.map { $0.name }, ["candidate"])
+      XCTAssertEqual(mismatch?.mismatches.first?.control, "control value")
+      XCTAssertEqual(mismatch?.mismatches.first?.candidate, "candidate value")
+    }
+
+    XCTAssertNotNil(result, "the result is published before the error is thrown.")
+  }
+
+  func testRaiseOnMismatchesIsSilentWhenEverythingMatches() throws {
+    let returnValue = try Scientist<String>().science { experiment in
+      experiment.enabled = { true }
+      experiment.raiseOnMismatches = true
+
+      experiment.use(control: { "same" })
+      experiment.tryNew(candidate: { "same" })
+    }
+
+    XCTAssertEqual(returnValue, "same")
+  }
+
+  func testRaiseOnMismatchesDoesNotThrowForIgnoredMismatches() throws {
+    let returnValue = try Scientist<String>().science { experiment in
+      experiment.enabled = { true }
+      experiment.raiseOnMismatches = true
+
+      experiment.use(control: { "control value" })
+      experiment.tryNew(candidate: { "candidate value" })
+
+      experiment.ignores { _, _ in true }
+    }
+
+    XCTAssertEqual(returnValue, "control value", "an ignored mismatch is not a failure.")
+  }
+
+  func testRaiseOnMismatchesIsOffByDefault() throws {
+    let returnValue = try Scientist<String>().science { experiment in
+      experiment.enabled = { true }
+
+      experiment.use(control: { "control value" })
+      experiment.tryNew(candidate: { "candidate value" })
+    }
+
+    XCTAssertEqual(returnValue, "control value", "a mismatch alone does not disturb the caller.")
+  }
+
+  func testRaiseWithChoosesTheError() {
+    XCTAssertThrowsError(
+      try Scientist<String>().science { experiment in
+        experiment.enabled = { true }
+        experiment.raiseOnMismatches = true
+
+        experiment.use(control: { "control value" })
+        experiment.tryNew(candidate: { "candidate value" })
+
+        experiment.raiseWith { result in
+          XCTAssertEqual(result.mismatches.map { $0.name }, ["candidate"])
+          return TestError.other
+        }
+      }
+    ) { error in
+      XCTAssertEqual(error as? TestError, .other)
+    }
+  }
+
+  func testRaisingOnMismatchesTakesPrecedenceOverTheControlsError() {
+    XCTAssertThrowsError(
+      try Scientist<String>().science { experiment in
+        experiment.enabled = { true }
+        experiment.raiseOnMismatches = true
+
+        experiment.use(control: { throw TestError.boom })
+        experiment.tryNew(candidate: { "candidate value" })
+      }
+    ) { error in
+      XCTAssertTrue(
+        error is MismatchError,
+        "a mismatching run is the more specific failure; got \(error)")
+    }
+  }
+
+  func testMismatchErrorDescribesThrownOutcomes() {
+    XCTAssertThrowsError(
+      try Scientist<String>().science(name: "described") { experiment in
+        experiment.enabled = { true }
+        experiment.raiseOnMismatches = true
+
+        experiment.use(control: { "control value" })
+        experiment.tryNew(candidate: { throw TestError.boom })
+      }
+    ) { error in
+      let mismatch = error as? MismatchError
+      XCTAssertEqual(mismatch?.mismatches.first?.candidate, "thrown boom")
+      XCTAssertEqual(
+        mismatch?.description,
+        "experiment \"described\" mismatched — candidate: expected control value, got thrown boom")
+    }
+  }
 }
