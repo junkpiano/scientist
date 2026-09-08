@@ -1,7 +1,7 @@
 # Scientist
 
 [![CI](https://github.com/junkpiano/scientist/actions/workflows/ci.yml/badge.svg)](https://github.com/junkpiano/scientist/actions/workflows/ci.yml)
-[![codecov](https://codecov.io/gh/junkpiano/scientist/branch/master/graph/badge.svg)](https://codecov.io/gh/junkpiano/scientist)
+[![codecov](https://codecov.io/gh/junkpiano/scientist/branch/main/graph/badge.svg)](https://codecov.io/gh/junkpiano/scientist)
 
 A Swift library for carefully refactoring critical paths.
 
