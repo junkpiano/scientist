@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [master]
+    branches: [main]
   pull_request:
 
 jobs:
@@ -16,3 +16,14 @@ jobs:
       - run: swift build -v
       - run: swift test -v
       - run: swift format lint -r Sources Tests
+
+  linux:
+    runs-on: ubuntu-latest
+    # The package supports Linux, and the toolchain differs enough from Xcode's
+    # to be worth building separately. Linting runs on macOS only; it would
+    # report the same thing here.
+    container: swift:6.1
+    steps:
+      - uses: actions/checkout@v4
+      - run: swift build -v
+      - run: swift test -v
