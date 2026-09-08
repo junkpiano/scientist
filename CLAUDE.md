@@ -37,7 +37,7 @@ SCIENTIST_BUILD_DOCC=1 swift package --allow-writing-to-directory ./docs \
   --hosting-base-path scientist --output-path ./docs
 ```
 
-`swift-docc-plugin` is only added to the dependency graph when `SCIENTIST_BUILD_DOCC` is set, so it never reaches packages that depend on Scientist.
+`swift-docc-plugin` is only added to the dependency graph when `SCIENTIST_BUILD_DOCC` is set, so it stays out of the graph for packages that depend on Scientist — unless they set the same variable themselves, since SwiftPM passes the environment through to manifest loading.
 
 To build or test on Linux, use the container: `./scripts/swift-container.sh` (see `Dockerfile`).
 

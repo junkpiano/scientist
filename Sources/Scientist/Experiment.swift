@@ -14,7 +14,8 @@
 /// ``use(control:)``, each new one with ``tryNew(name:candidate:)``, and set ``enabled``
 /// to decide whether the candidates run at all.
 ///
-/// Whatever the candidates return, ``run(name:)`` returns the control's value, so putting
+/// Whatever the candidates return, ``run(name:)`` returns the value of the behavior it
+/// ran as the control — by default the one registered with ``use(control:)`` — so putting
 /// a code path under experiment does not change what the caller sees.
 final public class Experiment<T: Equatable> {
   /// A behavior under experiment: either the control or a candidate.
@@ -33,8 +34,8 @@ final public class Experiment<T: Equatable> {
   /// Whether the candidates run.
   ///
   /// Defaults to `{ false }`, so an experiment stays dormant until you opt in. It is
-  /// evaluated on every ``run(name:)``, which is where a feature flag or a percentage
-  /// rollout belongs.
+  /// evaluated by ``run(name:)`` once at least two behaviors are registered, which is
+  /// where a feature flag or a percentage rollout belongs.
   public var enabled: () -> Bool = { return false }
 
   /// Arbitrary values carried alongside the experiment.
@@ -58,8 +59,8 @@ final public class Experiment<T: Equatable> {
 
   /// Registers the existing code path, under the name `"control"`.
   ///
-  /// Its value is what ``run(name:)`` returns, and what the candidates are compared
-  /// against.
+  /// Its value is what ``run(name:)`` returns and what the candidates are compared
+  /// against, unless the run names another behavior to use in its place.
   ///
   /// - Parameter control: Block producing the current behavior.
   public func use(control: @escaping ExperimentBlock) {
