@@ -12,114 +12,181 @@ import XCTest
 
 class ScientistTests: XCTestCase {
 
-  override func setUp() {
-    super.setUp()
-    // Put setup code here. This method is called before the invocation of each test method in the class.T
-  }
+  func testDisabledExperimentReturnsControlWithoutPublishing() throws {
+    var published = false
+    var candidateRan = false
 
-  override func tearDown() {
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
-    super.tearDown()
-  }
+    let returnValue = try Scientist<Bool>().science { experiment in
+      // `enabled` defaults to false, so the candidate must never be executed.
+      experiment.publish = { _ in published = true }
 
-  func testScience() {
-    // This is an example of a functional test case.
-    // Use XCTAssert and related functions to verify your tests produce the correct results.
-    do {
-      let returnValue = try Scientist<Bool>().science({ experiment in
-        experiment.tryNew(candidate: { () -> Bool in
-          return false
-        })
-
-        experiment.use(control: { () -> Bool in
-          return true
-        })
-
-        experiment.compare({ (controlValue, candidateValue) -> Bool in
-          return controlValue == candidateValue
-        })
+      experiment.use(control: { true })
+      experiment.tryNew(candidate: {
+        candidateRan = true
+        return false
       })
-      XCTAssertNotNil(returnValue, "returnValue should not be nil.")
-      XCTAssertTrue(returnValue == true)
-    } catch {
-      print(error)
     }
+
+    XCTAssertTrue(returnValue)
+    XCTAssertFalse(candidateRan, "candidate should not run while the experiment is disabled.")
+    XCTAssertFalse(published, "publish should not be called while the experiment is disabled.")
   }
 
-  func testCompareWithComparator() {
-    // This is an example of a functional test case.
-    // Use XCTAssert and related functions to verify your tests produce the correct results.
-    do {
-      let returnValue = try Scientist<String>().science(name: "CompareWithNil") { (experiment) in
+  func testMatchingCandidateIsReportedAsMatched() throws {
+    var result: Result<String>?
 
-        experiment.enabled = { return true }
-        experiment.publish = {
-          result in
-          XCTAssert(result.mismatches.count == 0)
-        }
+    let returnValue = try Scientist<String>().science(name: "matching") { experiment in
+      experiment.enabled = { true }
+      experiment.publish = { result = $0 }
 
-        XCTAssertTrue(experiment.name == "CompareWithNil")
+      experiment.use(control: { "test" })
+      experiment.tryNew(candidate: { "test" })
+    }
 
-        experiment.tryNew(candidate: { () -> String in
-          return "esttest"
-        })
+    XCTAssertEqual(returnValue, "test")
 
-        experiment.use(control: { () -> String in
-          return "test"
-        })
+    let published = try XCTUnwrap(result, "publish should have been called.")
+    XCTAssertEqual(published.experiment.name, "matching")
+    XCTAssertEqual(published.candidates.count, 1)
+    XCTAssertEqual(published.control?.name, "control")
+    XCTAssertEqual(published.mismatches.count, 0)
+    XCTAssertFalse(published.mismatched())
+    XCTAssertFalse(published.ignored())
+    XCTAssertTrue(published.matched())
+  }
 
-        experiment.compare({ (controlValue, _) -> Bool in
-          return controlValue.starts(with: "te")
-        })
+  func testMismatchingCandidateIsReportedAsMismatched() throws {
+    var result: Result<String>?
 
+    let returnValue = try Scientist<String>().science { experiment in
+      experiment.enabled = { true }
+      experiment.publish = { result = $0 }
+
+      experiment.use(control: { "control value" })
+      experiment.tryNew(candidate: { "candidate value" })
+    }
+
+    XCTAssertEqual(returnValue, "control value", "the control's value is always returned.")
+
+    let published = try XCTUnwrap(result, "publish should have been called.")
+    XCTAssertEqual(published.mismatches.map { $0.name }, ["candidate"])
+    XCTAssertTrue(published.mismatched())
+    XCTAssertFalse(published.ignored())
+    XCTAssertFalse(published.matched(), "a mismatched result must not report as matched.")
+  }
+
+  func testComparatorOverridesEquality() throws {
+    var result: Result<String>?
+
+    _ = try Scientist<String>().science { experiment in
+      experiment.enabled = { true }
+      experiment.publish = { result = $0 }
+
+      experiment.use(control: { "TEST" })
+      experiment.tryNew(candidate: { "test" })
+
+      // Values differ under `==`, but are equivalent case-insensitively.
+      experiment.compare { control, candidate in
+        control.lowercased() == candidate.lowercased()
       }
-
-      XCTAssertNotNil(returnValue, "returnValue shoudl not be nil.")
-      XCTAssertTrue(returnValue == "test")
-    } catch {
-      print(error)
     }
+
+    let published = try XCTUnwrap(result, "publish should have been called.")
+    XCTAssertEqual(published.mismatches.count, 0)
+    XCTAssertTrue(published.matched())
   }
 
-  func testCustomExperiment() {
-    // This is an example of a functional test case.
-    // Use XCTAssert and related functions to verify your tests produce the correct results.
-    do {
-      let returnValue = try Scientist<Bool>().science(name: "test") { (experiment) in
-        overrideExpParams(experiment: experiment)
+  func testIgnoredMismatchIsNotReportedAsMismatchOrMatch() throws {
+    var result: Result<Int>?
 
-        XCTAssertTrue(experiment.name == "test")
+    _ = try Scientist<Int>().science { experiment in
+      experiment.enabled = { true }
+      experiment.publish = { result = $0 }
 
-        experiment.tryNew(candidate: { () -> Bool in
-          return true
-        })
+      experiment.use(control: { 1 })
+      experiment.tryNew(name: "ignored", candidate: { 2 })
+      experiment.tryNew(name: "reported", candidate: { 3 })
 
-        experiment.use(control: { () -> Bool in
-          return true
-        })
+      experiment.ignores { _, candidate in candidate.name == "ignored" }
+    }
 
-        experiment.compare({ (controlValue, candidateValue) -> Bool in
-          return controlValue == candidateValue
-        })
+    let published = try XCTUnwrap(result, "publish should have been called.")
+    XCTAssertEqual(published.ignores.map { $0.name }, ["ignored"])
+    XCTAssertEqual(published.mismatches.map { $0.name }, ["reported"])
+    XCTAssertTrue(published.ignored())
+    XCTAssertTrue(published.mismatched())
+    XCTAssertFalse(published.matched())
+  }
 
+  func testFullyIgnoredMismatchIsNeitherMismatchedNorMatched() throws {
+    var result: Result<Int>?
+
+    _ = try Scientist<Int>().science { experiment in
+      experiment.enabled = { true }
+      experiment.publish = { result = $0 }
+
+      experiment.use(control: { 1 })
+      experiment.tryNew(candidate: { 2 })
+
+      experiment.ignores { _, _ in true }
+    }
+
+    let published = try XCTUnwrap(result, "publish should have been called.")
+    XCTAssertEqual(published.ignores.map { $0.name }, ["candidate"])
+    XCTAssertEqual(published.mismatches.count, 0)
+    XCTAssertTrue(published.ignored())
+    XCTAssertFalse(published.mismatched())
+    XCTAssertFalse(
+      published.matched(), "an ignored mismatch is not a match, even with no mismatches left.")
+  }
+
+  func testRunOptionSelectsWhichBehaviorIsTheControl() throws {
+    var result: Result<String>?
+
+    let returnValue = try Scientist<String>().science(
+      name: "run option", options: [Constants.runParameter: "candidate"]
+    ) { experiment in
+      experiment.enabled = { true }
+      experiment.publish = { result = $0 }
+
+      experiment.use(control: { "old" })
+      experiment.tryNew(candidate: { "new" })
+    }
+
+    XCTAssertEqual(returnValue, "new", "the named behavior's value is returned.")
+
+    let published = try XCTUnwrap(result, "publish should have been called.")
+    XCTAssertEqual(published.control?.name, "candidate")
+    XCTAssertEqual(published.mismatches.map { $0.name }, ["control"])
+  }
+
+  func testMissingBehaviorThrows() {
+    XCTAssertThrowsError(
+      try Scientist<Bool>().science(options: [Constants.runParameter: "nope"]) { experiment in
+        experiment.enabled = { true }
+        experiment.use(control: { true })
+        experiment.tryNew(candidate: { false })
       }
-
-      XCTAssertNotNil(returnValue, "returnValue shoudl not be nil.")
-      XCTAssertTrue(returnValue == true)
-    } catch {
-      print(error)
+    ) { error in
+      guard case ExperimentError.behaviorNotFound = error else {
+        return XCTFail("unexpected error: \(error)")
+      }
     }
   }
 
-  func overrideExpParams(experiment: Experiment<Bool>) {
-    experiment.enabled = {
-      return true
+  func testEveryBehaviorIsObserved() throws {
+    var result: Result<Bool>?
+
+    _ = try Scientist<Bool>().science { experiment in
+      experiment.enabled = { true }
+      experiment.publish = { result = $0 }
+
+      experiment.use(control: { true })
+      experiment.tryNew(candidate: { true })
     }
 
-    experiment.publish = {
-      result in
-
-      debugPrint(result.mismatches)
-    }
+    let published = try XCTUnwrap(result, "publish should have been called.")
+    XCTAssertEqual(published.observations.count, 2)
+    XCTAssertEqual(Set(published.observations.map { $0.name }), ["control", "candidate"])
   }
 }
