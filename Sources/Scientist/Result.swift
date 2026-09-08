@@ -36,7 +36,7 @@ public struct Result<T: Equatable> {
   }
 
   public func matched() -> Bool {
-    return mismatched() && !ignored()
+    return !mismatched() && !ignored()
   }
 
   init(experiment: Experiment<T>, observations: [Observation<T>], control: Observation<T>? = nil) {
