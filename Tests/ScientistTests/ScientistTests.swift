@@ -197,6 +197,16 @@ class ScientistTests: XCTestCase {
     case other
   }
 
+  // Two distinct types that describe themselves identically, to pin down that the default
+  // error comparison looks at the type and not only the description.
+  private struct DescribedError: Error, CustomStringConvertible {
+    let description: String
+  }
+
+  private struct OtherDescribedError: Error, CustomStringConvertible {
+    let description: String
+  }
+
   func testThrowingCandidateIsRecordedAndDoesNotReachTheCaller() throws {
     var result: Result<String>?
 
@@ -251,7 +261,9 @@ class ScientistTests: XCTestCase {
         experiment.use(control: { throw TestError.boom })
         experiment.tryNew(candidate: { throw TestError.boom })
       }
-    )
+    ) { error in
+      XCTAssertEqual(error as? TestError, .boom)
+    }
 
     let published = try XCTUnwrap(result, "publish should have been called.")
     XCTAssertEqual(published.mismatches.count, 0, "the same failure on both sides is a match.")
@@ -269,10 +281,108 @@ class ScientistTests: XCTestCase {
         experiment.use(control: { throw TestError.boom })
         experiment.tryNew(candidate: { throw TestError.other })
       }
-    )
+    ) { error in
+      XCTAssertEqual(error as? TestError, .boom, "the control's error, not the candidate's.")
+    }
 
     let published = try XCTUnwrap(result, "publish should have been called.")
     XCTAssertEqual(published.mismatches.map { $0.name }, ["candidate"])
+  }
+
+  func testRunOptionSelectsWhichErrorPropagates() {
+    XCTAssertThrowsError(
+      try Scientist<String>().science(options: [Constants.runParameter: "candidate"]) {
+        experiment in
+        experiment.enabled = { true }
+
+        experiment.use(control: { throw TestError.boom })
+        experiment.tryNew(candidate: { throw TestError.other })
+      }
+    ) { error in
+      XCTAssertEqual(error as? TestError, .other, "the named behavior's error is the caller's.")
+    }
+  }
+
+  func testDefaultErrorComparisonDistinguishesTypesWithTheSameDescription() throws {
+    var result: Result<String>?
+
+    XCTAssertThrowsError(
+      try Scientist<String>().science { experiment in
+        experiment.enabled = { true }
+        experiment.publish = { result = $0 }
+
+        experiment.use(control: { throw DescribedError(description: "boom") })
+        experiment.tryNew(candidate: { throw OtherDescribedError(description: "boom") })
+      }
+    )
+
+    let published = try XCTUnwrap(result, "publish should have been called.")
+    XCTAssertEqual(
+      published.mismatches.map { $0.name }, ["candidate"],
+      "errors of different types are not equivalent, however they describe themselves.")
+  }
+
+  func testCompareErrorsCanRejectIdenticalErrors() throws {
+    var result: Result<String>?
+
+    XCTAssertThrowsError(
+      try Scientist<String>().science { experiment in
+        experiment.enabled = { true }
+        experiment.publish = { result = $0 }
+
+        experiment.use(control: { throw TestError.boom })
+        experiment.tryNew(candidate: { throw TestError.boom })
+
+        // The same error on both sides, rejected by the block.
+        experiment.compareErrors { _, _ in false }
+      }
+    )
+
+    let published = try XCTUnwrap(result, "publish should have been called.")
+    XCTAssertEqual(
+      published.mismatches.map { $0.name }, ["candidate"],
+      "the registered block decides, not the default comparison.")
+  }
+
+  func testComparatorsReceiveTheControlThenTheCandidate() throws {
+    var seenControlValue: String?
+    var seenCandidateValue: String?
+    var seenControlError: TestError?
+    var seenCandidateError: TestError?
+
+    _ = try Scientist<String>().science { experiment in
+      experiment.enabled = { true }
+
+      experiment.use(control: { "control value" })
+      experiment.tryNew(candidate: { "candidate value" })
+
+      experiment.compare { control, candidate in
+        seenControlValue = control
+        seenCandidateValue = candidate
+        return true
+      }
+    }
+
+    XCTAssertEqual(seenControlValue, "control value")
+    XCTAssertEqual(seenCandidateValue, "candidate value")
+
+    XCTAssertThrowsError(
+      try Scientist<String>().science { experiment in
+        experiment.enabled = { true }
+
+        experiment.use(control: { throw TestError.boom })
+        experiment.tryNew(candidate: { throw TestError.other })
+
+        experiment.compareErrors { control, candidate in
+          seenControlError = control as? TestError
+          seenCandidateError = candidate as? TestError
+          return true
+        }
+      }
+    )
+
+    XCTAssertEqual(seenControlError, .boom)
+    XCTAssertEqual(seenCandidateError, .other)
   }
 
   func testThrowingIsNeverEquivalentToReturning() throws {
