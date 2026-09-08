@@ -8,11 +8,24 @@
 
 import Foundation
 
+/// What a single behavior returned, and what it cost to get there.
+///
+/// One is created per registered behavior each time an experiment runs, and they reach a
+/// publish handler through ``Result``.
 public struct Observation<T: Equatable> {
+  /// When the block started running.
   public var now: Date
+
+  /// The experiment this observation belongs to.
   public var experiment: Experiment<T>
+
+  /// The name the behavior was registered under, `"control"` by default.
   public var name: String
+
+  /// The value the block returned.
   public var value: T
+
+  /// How long the block took, in milliseconds.
   public var during: Double
 
   init(name: String, experiment: Experiment<T>, block: Experiment<T>.ExperimentBlock) {
