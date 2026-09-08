@@ -455,8 +455,8 @@ class ScientistTests: XCTestCase {
       let mismatch = error as? MismatchError
       XCTAssertEqual(mismatch?.experimentName, "raising")
       XCTAssertEqual(mismatch?.mismatches.map { $0.name }, ["candidate"])
-      XCTAssertEqual(mismatch?.mismatches.first?.control, "control value")
-      XCTAssertEqual(mismatch?.mismatches.first?.candidate, "candidate value")
+      XCTAssertEqual(mismatch?.mismatches.first?.control, "returned control value")
+      XCTAssertEqual(mismatch?.mismatches.first?.candidate, "returned candidate value")
     }
 
     XCTAssertNotNil(result, "the result is published before the error is thrown.")
@@ -545,10 +545,82 @@ class ScientistTests: XCTestCase {
       }
     ) { error in
       let mismatch = error as? MismatchError
-      XCTAssertEqual(mismatch?.mismatches.first?.candidate, "thrown boom")
+      XCTAssertEqual(mismatch?.mismatches.first?.candidate, "threw TestError: boom")
       XCTAssertEqual(
         mismatch?.description,
-        "experiment \"described\" mismatched — candidate: expected control value, got thrown boom")
+        "experiment \"described\" mismatched — candidate: control returned control value, "
+          + "candidate threw TestError: boom")
     }
+  }
+
+  func testMismatchSummaryDistinguishesErrorTypesAndValuesThatReadAlike() {
+    XCTAssertThrowsError(
+      try Scientist<String>().science { experiment in
+        experiment.enabled = { true }
+        experiment.raiseOnMismatches = true
+
+        // A value that reads like a thrown error, against two error types that describe
+        // themselves identically. None of the three may summarise the same way.
+        experiment.use(control: { "boom" })
+        experiment.tryNew(
+          name: "described", candidate: { throw DescribedError(description: "boom") })
+        experiment.tryNew(
+          name: "other-described", candidate: { throw OtherDescribedError(description: "boom") })
+      }
+    ) { error in
+      let mismatch = error as? MismatchError
+      let summaries = Dictionary(
+        uniqueKeysWithValues: (mismatch?.mismatches ?? []).map { ($0.name, $0.candidate) })
+      XCTAssertEqual(summaries["described"], "threw DescribedError: boom")
+      XCTAssertEqual(summaries["other-described"], "threw OtherDescribedError: boom")
+      XCTAssertEqual(mismatch?.mismatches.first?.control, "returned boom")
+    }
+  }
+
+  func testMismatchSummaryCoversEveryMismatchAndNothingElse() {
+    XCTAssertThrowsError(
+      try Scientist<Int>().science { experiment in
+        experiment.enabled = { true }
+        experiment.raiseOnMismatches = true
+
+        experiment.use(control: { 1 })
+        experiment.tryNew(name: "matching", candidate: { 1 })
+        experiment.tryNew(name: "ignored", candidate: { 2 })
+        experiment.tryNew(name: "first-mismatch", candidate: { 3 })
+        experiment.tryNew(name: "second-mismatch", candidate: { 4 })
+
+        experiment.ignores { _, candidate in candidate.name == "ignored" }
+      }
+    ) { error in
+      let mismatch = error as? MismatchError
+      XCTAssertEqual(
+        Set((mismatch?.mismatches ?? []).map { $0.name }), ["first-mismatch", "second-mismatch"],
+        "matching and ignored candidates do not belong in the summary, and neither mismatch "
+          + "may be dropped.")
+    }
+  }
+
+  func testRaiseWithRunsAfterPublishing() {
+    var publishedBeforeFactory: Bool?
+
+    XCTAssertThrowsError(
+      try Scientist<String>().science { experiment in
+        var published = false
+        experiment.enabled = { true }
+        experiment.raiseOnMismatches = true
+        experiment.publish = { _ in published = true }
+
+        experiment.use(control: { "control value" })
+        experiment.tryNew(candidate: { "candidate value" })
+
+        experiment.raiseWith { _ in
+          publishedBeforeFactory = published
+          return TestError.other
+        }
+      }
+    )
+
+    XCTAssertEqual(
+      publishedBeforeFactory, true, "the result is published before the error is built.")
   }
 }

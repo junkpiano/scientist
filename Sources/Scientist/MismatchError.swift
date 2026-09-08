@@ -31,7 +31,7 @@ public struct MismatchError: Error, CustomStringConvertible {
 
   public var description: String {
     let detail = mismatches.map { mismatch in
-      "\(mismatch.name): expected \(mismatch.control), got \(mismatch.candidate)"
+      "\(mismatch.name): control \(mismatch.control), candidate \(mismatch.candidate)"
     }.joined(separator: "; ")
     return "experiment \"\(experimentName)\" mismatched — \(detail)"
   }
@@ -42,18 +42,23 @@ public struct MismatchError: Error, CustomStringConvertible {
     mismatches = result.mismatches.map { candidate in
       Mismatch(
         name: candidate.name,
-        control: control.map(MismatchError.describe) ?? "no control",
+        control: control.map(MismatchError.describe) ?? "had no control",
         candidate: MismatchError.describe(candidate))
     }
   }
 
+  /// Describes an outcome so that two different ones cannot read the same way.
+  ///
+  /// The type is named because two error types can describe themselves identically, and
+  /// that difference is exactly what made the run mismatch. The `threw` and `returned`
+  /// prefixes keep a thrown error apart from a value that happens to read like one.
   private static func describe<T: Equatable>(_ observation: Observation<T>) -> String {
     if let error = observation.error {
-      return "thrown \(error)"
+      return "threw \(type(of: error)): \(error)"
     }
     if let value = observation.value {
-      return "\(value)"
+      return "returned \(value)"
     }
-    return "nothing"
+    return "produced nothing"
   }
 }
