@@ -50,8 +50,8 @@ public struct Result<T: Equatable> {
 
   /// Whether every candidate matched the control.
   ///
-  /// An ignored mismatch is not a match: a result with ignored candidates reports `false`
-  /// here and `false` from ``mismatched()`` alike.
+  /// An ignored mismatch is not a match: a result whose only differences were ignored
+  /// reports `false` here even though ``mismatched()`` also reports `false`.
   public func matched() -> Bool {
     return !mismatched() && !ignored()
   }
