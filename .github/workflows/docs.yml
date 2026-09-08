@@ -1,0 +1,61 @@
+name: Docs
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow one docs deployment at a time, and let a running one finish.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+      - name: Build documentation
+        env:
+          # Opts the DocC plugin into the dependency graph; see Package.swift.
+          SCIENTIST_BUILD_DOCC: "1"
+        run: |
+          swift package --allow-writing-to-directory ./docs \
+            generate-documentation \
+            --target Scientist \
+            --disable-indexing \
+            --transform-for-static-hosting \
+            --hosting-base-path scientist \
+            --output-path ./docs
+      - name: Redirect the site root to the module page
+        # DocC serves its content from /documentation/<module>; without this the
+        # root URL renders an empty page.
+        run: |
+          cat > ./docs/index.html <<'HTML'
+          <!doctype html>
+          <meta charset="utf-8">
+          <title>Scientist</title>
+          <meta http-equiv="refresh" content="0; url=/scientist/documentation/scientist">
+          <link rel="canonical" href="/scientist/documentation/scientist">
+          HTML
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./docs
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

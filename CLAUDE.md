@@ -28,15 +28,20 @@ swift format lint -r Sources Tests
 swift format format -i -r Sources Tests
 ```
 
-Ruby tooling (danger, jazzy) is pinned via `mise` (`.ruby-version` / `mise.toml`, Ruby 3.3.12). Install gems with `bundle install` before running them.
-
-Generate docs (jazzy, output goes to `docs/`):
+Generate docs (DocC, output goes to the untracked `docs/`):
 
 ```sh
-bundle exec jazzy
+SCIENTIST_BUILD_DOCC=1 swift package --allow-writing-to-directory ./docs \
+  generate-documentation --target Scientist \
+  --disable-indexing --transform-for-static-hosting \
+  --hosting-base-path scientist --output-path ./docs
 ```
 
-CI (`.github/workflows/ci.yml`) runs `swift build`/`swift test`/`swift format lint` on macOS on every push/PR.
+`swift-docc-plugin` is only added to the dependency graph when `SCIENTIST_BUILD_DOCC` is set, so it never reaches packages that depend on Scientist.
+
+To build or test on Linux, use the container: `./scripts/swift-container.sh` (see `Dockerfile`).
+
+CI (`.github/workflows/ci.yml`) runs `swift build`/`swift test`/`swift format lint` on macOS on every push/PR. `.github/workflows/docs.yml` builds the DocC site on every push to `main` and deploys it to GitHub Pages.
 
 ## Architecture
 

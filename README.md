@@ -49,13 +49,15 @@ dependencies: [
     }
 ```
 
-Full Documentation is available [Here](https://junkpiano.github.io/scientist/).
+Full Documentation is available [Here](https://junkpiano.github.io/scientist/documentation/scientist).
 
 ## Development
 
 please run test before you send pull request
 
 `swift test`
+
+On Linux, `./scripts/swift-container.sh` runs the same commands inside a Swift container.
 
 ## Porting from
 
