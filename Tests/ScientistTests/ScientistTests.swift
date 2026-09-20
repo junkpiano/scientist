@@ -853,10 +853,17 @@ class ScientistTests: XCTestCase {
 
   func testAMutatingCleanerCannotMaskAMismatch() throws {
     var result: Result<Mutable>?
+    var cleanedInPublish: [Int] = []
 
     _ = try Scientist<Mutable>().science { experiment in
       experiment.enabled = { true }
-      experiment.publish = { result = $0 }
+
+      // Read the cleaned values the way a real publish handler would, which is what
+      // actually runs the cleaner. Everything asserted below is read after that.
+      experiment.publish = { published in
+        cleanedInPublish = published.observations.compactMap { $0.cleanedValue as? Int }
+        result = published
+      }
 
       experiment.use(control: { Mutable(id: 1) })
       experiment.tryNew(candidate: { Mutable(id: 2) })
@@ -869,8 +876,43 @@ class ScientistTests: XCTestCase {
       }
     }
 
+    XCTAssertEqual(cleanedInPublish, [0, 0], "the cleaner ran, and did mutate both objects.")
+    XCTAssertEqual(
+      result?.control?.value, Mutable(id: 0), "the mutation is visible afterwards.")
+
     XCTAssertEqual(result?.mismatched(), true, "cleaning must not reach back into the comparison.")
     XCTAssertEqual(result?.mismatches.map { $0.name }, ["candidate"])
+  }
+
+  func testEveryComparisonIsFinishedBeforeAnythingIsCleaned() throws {
+    var result: Result<Mutable>?
+
+    _ = try Scientist<Mutable>().science { experiment in
+      experiment.enabled = { true }
+
+      // Several candidates, each cleaned during publishing. If cleaning could reach the
+      // comparison, the ones cleaned first would flatten the ones compared later.
+      experiment.publish = { published in
+        for observation in published.observations {
+          _ = observation.cleanedValue
+        }
+        result = published
+      }
+
+      experiment.use(control: { Mutable(id: 1) })
+      experiment.tryNew(name: "matching", candidate: { Mutable(id: 1) })
+      experiment.tryNew(name: "first", candidate: { Mutable(id: 2) })
+      experiment.tryNew(name: "second", candidate: { Mutable(id: 3) })
+
+      experiment.clean { object in
+        object.id = 0
+        return object.id
+      }
+    }
+
+    XCTAssertEqual(
+      Set((result?.mismatches ?? []).map { $0.name }), ["first", "second"],
+      "every candidate was compared against the control before any of them was cleaned.")
   }
 
   func testCleanerKeepsTheLastOneRegistered() throws {

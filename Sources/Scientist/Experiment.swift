@@ -171,8 +171,14 @@ final public class Experiment<T: Equatable> {
   /// ```
   ///
   /// Cleaning does not affect the comparison: candidates are compared against the control
-  /// by their real values, and the comparison is over before a cleaner runs, so not even
-  /// one that mutates a reference type can mask a mismatch.
+  /// by their real values, and every one of those comparisons is finished before anything
+  /// can read a cleaned value.
+  ///
+  /// That ordering is what protects the comparison — there is no barrier around the value
+  /// itself. A cleaner that mutates a reference type, which a cleaner has no business
+  /// doing, is still visible to whatever runs after it: an ``ignores(_:)`` condition that
+  /// reads a cleaned value changes what the conditions after it see, and those decide
+  /// which mismatches are reported. Reduce the input; do not touch it.
   ///
   /// A cleaner runs when ``Observation/cleanedValue`` is read — on each read, and never
   /// for a behavior that threw or for an experiment that did not run. Keep it cheap and

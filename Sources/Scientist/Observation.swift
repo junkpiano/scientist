@@ -34,10 +34,12 @@ public struct Observation<T: Equatable> {
   /// `Sendable`. A behavior that successfully returned `nil` is not the same as one that
   /// threw, and its `nil` is passed to the cleaner like any other value.
   ///
-  /// The cleaner runs on each read rather than once up front, so that nothing an
-  /// ill-behaved cleaner does to a reference type can reach the comparison, which has
-  /// finished by the time anything reads this. Keep a cleaner cheap and free of side
-  /// effects; it is a reduction, not a step of the experiment.
+  /// The cleaner runs on each read rather than once up front, which is what keeps it
+  /// after the comparison: every equality check has finished by the time anything reads
+  /// this. Reading it twice cleans twice, and the result reflects the cleaner registered
+  /// at that moment. Keep a cleaner cheap and free of side effects; it is a reduction, not
+  /// a step of the experiment. See ``Experiment/clean(_:)`` for what a cleaner that
+  /// mutates its input can still disturb.
   public var cleanedValue: (any Sendable)? {
     guard let value = value else {
       return nil
