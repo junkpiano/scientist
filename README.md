@@ -10,7 +10,7 @@ A Swift library for carefully refactoring critical paths.
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/junkpiano/scientist.git", from: "0.6.0")
+    .package(url: "https://github.com/junkpiano/scientist.git", from: "1.0.0")
 ]
 ```
 
