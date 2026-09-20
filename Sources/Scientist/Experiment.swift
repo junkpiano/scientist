@@ -36,6 +36,14 @@ final public class Experiment<T: Equatable> {
   /// when they are the same type and describe themselves the same way.
   public typealias ErrorComparatorBlock = (_ control: Error, _ candidate: Error) -> Bool
 
+  /// Reduces a value to the shape worth publishing.
+  ///
+  /// Registered with ``clean(_:)``. It returns `any Sendable` rather than `T` because
+  /// reducing is the point — a cleaner usually produces something smaller and of another
+  /// type — and `Sendable` because a cleaned value exists to be handed to a log, a metrics
+  /// sink or an error reporter, which is to say across a boundary.
+  public typealias CleanerBlock = (T) -> any Sendable
+
   /// Type of block which define the conditions to ignore comparing observations.
   public typealias IgnoreObservationsBlock = (
     _ control: Observation<T>, _ candidate: Observation<T>
@@ -98,6 +106,7 @@ final public class Experiment<T: Equatable> {
   private var comparator: ComparatorBlock?
   private var errorComparator: ErrorComparatorBlock?
   private var mismatchError: ((Result<T>) -> Error)?
+  private var cleaner: CleanerBlock?
   private var ignoreConditions: [IgnoreObservationsBlock] = []
 
   /// Registers the existing code path, under the name `"control"`.
@@ -144,6 +153,31 @@ final public class Experiment<T: Equatable> {
   /// - Parameter compare: Returns `true` when the two values count as equivalent.
   public func compare(_ compare: @escaping ComparatorBlock) {
     comparator = compare
+  }
+
+  /// Reduces each observed value to something worth publishing.
+  ///
+  /// A value under experiment is often far larger than what you want to store — a whole
+  /// object graph, when all a mismatch report needs is a handful of identifiers. Register
+  /// a cleaner and each ``Observation`` carries the reduced form in
+  /// ``Observation/cleanedValue`` alongside the original.
+  ///
+  /// ```swift
+  /// experiment.clean { users in users.map(\.login).sorted() }
+  ///
+  /// experiment.publish = { result in
+  ///   metrics.record(result.control?.cleanedValue as? [String])
+  /// }
+  /// ```
+  ///
+  /// Cleaning does not affect the comparison: candidates are still compared against the
+  /// control by their real values, so a cleaner cannot mask a mismatch. It runs once per
+  /// observation, whether or not ``publish`` reads the result, and not at all for a
+  /// behavior that threw.
+  ///
+  /// - Parameter clean: Reduces a value to the form to publish.
+  public func clean(_ clean: @escaping CleanerBlock) {
+    cleaner = clean
   }
 
   /// Compares thrown errors with `compare` instead of the default.
@@ -254,6 +288,10 @@ final public class Experiment<T: Equatable> {
   func observationsAreEquivalent(control: Observation<T>, candidate: Observation<T>) -> Bool {
     return control.equivalentTo(
       other: candidate, comparator: comparator, errorComparator: errorComparator)
+  }
+
+  func cleanedValue(for value: T) -> (any Sendable)? {
+    return cleaner?(value)
   }
 
   func ignoresMismatchedObservations(control: Observation<T>, candidate: Observation<T>) -> Bool {
