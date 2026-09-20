@@ -70,6 +70,25 @@ final public class Experiment<T: Equatable> {
   /// recorded either way. Ignored mismatches do not throw. The error is ``MismatchError``
   /// unless ``raiseWith(_:)`` chooses another, and it takes precedence over an error
   /// thrown by the control.
+  ///
+  /// ```swift
+  /// func testRefactoredCheckMatches() throws {
+  ///   _ = try Scientist<Bool>().science(name: "allowed") { experiment in
+  ///     experiment.enabled = { true }
+  ///     experiment.raiseOnMismatches = true
+  ///
+  ///     experiment.use { legacyCheck(user) }
+  ///     experiment.tryNew { user.allowed }
+  ///   }
+  /// }
+  /// ```
+  ///
+  /// The thrown ``MismatchError`` describes itself as, for example:
+  ///
+  /// ```
+  /// experiment "allowed" mismatched — candidate: control returned true, candidate
+  /// returned false
+  /// ```
   public var raiseOnMismatches: Bool = false
 
   /// The name this experiment was created with.
@@ -144,7 +163,19 @@ final public class Experiment<T: Equatable> {
   /// Chooses the error thrown when ``raiseOnMismatches`` is set and the run mismatched.
   ///
   /// Without one, ``MismatchError`` is thrown. Register this to throw something a test
-  /// harness already understands, or to carry more of the run's detail.
+  /// harness already understands, or to carry more of the run's detail than the summary
+  /// ``MismatchError`` holds — the block receives the whole ``Result``, observations
+  /// included.
+  ///
+  /// ```swift
+  /// experiment.raiseWith { result in
+  ///   DivergedError(experiment: result.experiment.name, mismatches: result.mismatches)
+  /// }
+  /// ```
+  ///
+  /// It is called only when a mismatch is actually going to be thrown: never when
+  /// ``raiseOnMismatches`` is `false`, when every candidate matched, or when every
+  /// mismatch was ignored. It runs after ``publish``.
   ///
   /// - Parameter make: Builds the error from the result that mismatched.
   public func raiseWith(_ make: @escaping (Result<T>) -> Error) {

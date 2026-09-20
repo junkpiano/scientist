@@ -10,8 +10,23 @@
 /// Swift 6, and a `Result` holds its `Experiment`, which is a mutable class. The summary
 /// is what a failing test needs to say which candidate diverged and what it produced.
 /// Register ``Experiment/raiseWith(_:)`` for anything richer.
+///
+/// Its ``description`` is written to be read in test output:
+///
+/// ```
+/// experiment "allowed" mismatched — candidate: control returned true, candidate
+/// returned false
+/// ```
+///
+/// ``mismatches`` holds the same detail in parts, for a harness that wants to report it
+/// its own way.
 public struct MismatchError: Error, CustomStringConvertible {
   /// One candidate that did not match the control.
+  ///
+  /// The two outcomes are already rendered as text, each prefixed with `returned` or
+  /// `threw` so that a value cannot be mistaken for an error. A thrown error is named by
+  /// its fully qualified type as well as its description, because two error types can
+  /// describe themselves identically and that difference is what made the run mismatch.
   public struct Mismatch: Sendable {
     /// The name the candidate was registered under.
     public let name: String
@@ -29,6 +44,8 @@ public struct MismatchError: Error, CustomStringConvertible {
   /// The candidates that did not match the control and were not ignored.
   public let mismatches: [Mismatch]
 
+  /// Every mismatch on one line: the experiment's name, then each candidate against the
+  /// control.
   public var description: String {
     let detail = mismatches.map { mismatch in
       "\(mismatch.name): control \(mismatch.control), candidate \(mismatch.candidate)"
