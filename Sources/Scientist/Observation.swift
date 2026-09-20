@@ -25,6 +25,28 @@ public struct Observation<T: Equatable> {
   /// The value the block returned, or `nil` if it threw.
   public var value: T?
 
+  /// The value reduced by the cleaner registered with ``Experiment/clean(_:)``, or `nil`
+  /// if there is none.
+  ///
+  /// It is `nil` whenever ``value`` is — a behavior that threw has nothing to reduce — and
+  /// also when no cleaner was registered, in which case ``value`` is already the thing to
+  /// publish. It is not a fallback copy of ``value``: `T` is only `Equatable`, and this is
+  /// `Sendable`. A behavior that successfully returned `nil` is not the same as one that
+  /// threw, and its `nil` is passed to the cleaner like any other value.
+  ///
+  /// The cleaner runs on each read rather than once up front, which is what keeps it
+  /// after the comparison: every equality check has finished by the time anything reads
+  /// this. Reading it twice cleans twice, and the result reflects the cleaner registered
+  /// at that moment. Keep a cleaner cheap and free of side effects; it is a reduction, not
+  /// a step of the experiment. See ``Experiment/clean(_:)`` for what a cleaner that
+  /// mutates its input can still disturb.
+  public var cleanedValue: (any Sendable)? {
+    guard let value = value else {
+      return nil
+    }
+    return experiment.cleanedValue(for: value)
+  }
+
   /// The error the block threw, or `nil` if it returned normally.
   ///
   /// A candidate that fails is an outcome worth recording, not a reason to take the

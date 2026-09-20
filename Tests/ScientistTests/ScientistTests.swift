@@ -755,4 +755,265 @@ class ScientistTests: XCTestCase {
     XCTAssertEqual(
       publishedBeforeFactory, true, "the result is published before the error is built.")
   }
+
+  // MARK: - Cleaning published values
+
+  func testCleanerReducesEachObservedValue() throws {
+    var result: Result<[String]>?
+
+    let returnValue = try Scientist<[String]>().science { experiment in
+      experiment.enabled = { true }
+      experiment.publish = { result = $0 }
+
+      experiment.use(control: { ["zoe", "adam"] })
+      experiment.tryNew(candidate: { ["zoe", "adam"] })
+
+      experiment.clean { users in users.sorted().joined(separator: ",") }
+    }
+
+    XCTAssertEqual(returnValue, ["zoe", "adam"], "cleaning does not change what run returns.")
+    XCTAssertEqual(result?.control?.cleanedValue as? String, "adam,zoe")
+    XCTAssertEqual(result?.candidates.first?.cleanedValue as? String, "adam,zoe")
+    XCTAssertEqual(
+      result?.control?.value, ["zoe", "adam"], "the original value is kept alongside.")
+  }
+
+  func testCleanedValueIsNilWithoutACleaner() throws {
+    var result: Result<String>?
+
+    _ = try Scientist<String>().science { experiment in
+      experiment.enabled = { true }
+      experiment.publish = { result = $0 }
+
+      experiment.use(control: { "control value" })
+      experiment.tryNew(candidate: { "control value" })
+    }
+
+    XCTAssertNil(
+      result?.control?.cleanedValue, "without a cleaner there is no reduced form to publish.")
+  }
+
+  func testCleanerDoesNotRunForABehaviorThatThrew() throws {
+    var result: Result<String>?
+    var cleanedValues: [String] = []
+
+    _ = try Scientist<String>().science { experiment in
+      experiment.enabled = { true }
+      experiment.publish = { result = $0 }
+
+      experiment.use(control: { "control value" })
+      experiment.tryNew(candidate: { throw TestError.boom })
+
+      experiment.clean { value in
+        cleanedValues.append(value)
+        return value.uppercased()
+      }
+    }
+
+    XCTAssertNil(
+      result?.mismatches.first?.cleanedValue, "a behavior that threw has nothing to clean.")
+    XCTAssertEqual(cleanedValues, [], "and reading it does not reach the cleaner.")
+
+    XCTAssertEqual(result?.control?.cleanedValue as? String, "CONTROL VALUE")
+    XCTAssertEqual(cleanedValues, ["control value"])
+  }
+
+  func testCleaningDoesNotAffectTheComparison() throws {
+    var result: Result<String>?
+
+    _ = try Scientist<String>().science { experiment in
+      experiment.enabled = { true }
+      experiment.publish = { result = $0 }
+
+      // The cleaner flattens both values to the same thing. The comparison must still see
+      // the real ones, or a cleaner could quietly hide a mismatch.
+      experiment.use(control: { "control value" })
+      experiment.tryNew(candidate: { "candidate value" })
+
+      experiment.clean { _ in "identical" }
+    }
+
+    XCTAssertEqual(result?.mismatched(), true)
+    XCTAssertEqual(result?.mismatches.map { $0.name }, ["candidate"])
+  }
+
+  // A reference type whose equality looks at one mutable property, to pin down that
+  // cleaning cannot reach back and change what the comparison sees.
+  private final class Mutable: Equatable {
+    var id: Int
+
+    init(id: Int) {
+      self.id = id
+    }
+
+    static func == (lhs: Mutable, rhs: Mutable) -> Bool {
+      return lhs.id == rhs.id
+    }
+  }
+
+  func testAMutatingCleanerCannotMaskAMismatch() throws {
+    var result: Result<Mutable>?
+    var cleanedInPublish: [Int] = []
+
+    _ = try Scientist<Mutable>().science { experiment in
+      experiment.enabled = { true }
+
+      // Read the cleaned values the way a real publish handler would, which is what
+      // actually runs the cleaner. Everything asserted below is read after that.
+      experiment.publish = { published in
+        cleanedInPublish = published.observations.compactMap { $0.cleanedValue as? Int }
+        result = published
+      }
+
+      experiment.use(control: { Mutable(id: 1) })
+      experiment.tryNew(candidate: { Mutable(id: 2) })
+
+      // A cleaner has no business mutating its input, but a reference type lets it. The
+      // comparison must already have happened by the time it runs.
+      experiment.clean { object in
+        object.id = 0
+        return object.id
+      }
+    }
+
+    XCTAssertEqual(cleanedInPublish, [0, 0], "the cleaner ran, and did mutate both objects.")
+    XCTAssertEqual(
+      result?.control?.value, Mutable(id: 0), "the mutation is visible afterwards.")
+
+    XCTAssertEqual(result?.mismatched(), true, "cleaning must not reach back into the comparison.")
+    XCTAssertEqual(result?.mismatches.map { $0.name }, ["candidate"])
+  }
+
+  func testEveryComparisonIsFinishedBeforeAnythingIsCleaned() throws {
+    var result: Result<Mutable>?
+
+    _ = try Scientist<Mutable>().science { experiment in
+      experiment.enabled = { true }
+
+      // Several candidates, each cleaned during publishing. If cleaning could reach the
+      // comparison, the ones cleaned first would flatten the ones compared later.
+      experiment.publish = { published in
+        for observation in published.observations {
+          _ = observation.cleanedValue
+        }
+        result = published
+      }
+
+      experiment.use(control: { Mutable(id: 1) })
+      experiment.tryNew(name: "matching", candidate: { Mutable(id: 1) })
+      experiment.tryNew(name: "first", candidate: { Mutable(id: 2) })
+      experiment.tryNew(name: "second", candidate: { Mutable(id: 3) })
+
+      experiment.clean { object in
+        object.id = 0
+        return object.id
+      }
+    }
+
+    XCTAssertEqual(
+      Set((result?.mismatches ?? []).map { $0.name }), ["first", "second"],
+      "every candidate was compared against the control before any of them was cleaned.")
+  }
+
+  func testCleanerKeepsTheLastOneRegistered() throws {
+    var result: Result<String>?
+
+    _ = try Scientist<String>().science { experiment in
+      experiment.enabled = { true }
+      experiment.publish = { result = $0 }
+
+      experiment.use(control: { "value" })
+      experiment.tryNew(candidate: { "value" })
+
+      experiment.clean { _ in "first" }
+      experiment.clean { _ in "second" }
+    }
+
+    XCTAssertEqual(result?.control?.cleanedValue as? String, "second")
+  }
+
+  func testCleanerRunsOnlyWhenTheCleanedValueIsRead() throws {
+    var result: Result<String>?
+    var cleanerCalls = 0
+
+    _ = try Scientist<String>().science { experiment in
+      experiment.enabled = { true }
+      experiment.publish = { result = $0 }
+
+      experiment.use(control: { "value" })
+      experiment.tryNew(candidate: { "value" })
+
+      experiment.clean { value in
+        cleanerCalls += 1
+        return value.uppercased()
+      }
+    }
+
+    XCTAssertEqual(cleanerCalls, 0, "a publish handler that ignores cleaned values pays nothing.")
+
+    _ = result?.control?.cleanedValue
+    XCTAssertEqual(cleanerCalls, 1)
+
+    _ = result?.control?.cleanedValue
+    XCTAssertEqual(cleanerCalls, 2, "the cleaner runs per read; it is not memoized.")
+  }
+
+  func testCleanerIsNotRunForAnExperimentThatDidNotRun() throws {
+    var cleanerCalls = 0
+
+    let returnValue = try Scientist<String>().science { experiment in
+      experiment.enabled = { false }
+
+      experiment.use(control: { "control value" })
+      experiment.tryNew(candidate: { "candidate value" })
+
+      experiment.clean { value in
+        cleanerCalls += 1
+        return value
+      }
+    }
+
+    XCTAssertEqual(returnValue, "control value")
+    XCTAssertEqual(cleanerCalls, 0, "no observations, so nothing to clean.")
+  }
+
+  func testCleanerReceivesAValueThatWasSuccessfullyNil() throws {
+    var result: Result<String?>?
+    var cleanedValues: [String?] = []
+
+    _ = try Scientist<String?>().science { experiment in
+      experiment.enabled = { true }
+      experiment.publish = { result = $0 }
+
+      // Returning nil is an outcome, unlike throwing, so it is cleaned like any other.
+      experiment.use(control: { nil })
+      experiment.tryNew(candidate: { nil })
+
+      experiment.clean { value in
+        cleanedValues.append(value)
+        return value ?? "was nil"
+      }
+    }
+
+    XCTAssertEqual(result?.control?.cleanedValue as? String, "was nil")
+    XCTAssertEqual(cleanedValues.count, 1)
+    XCTAssertEqual(cleanedValues.first, String?.none)
+  }
+
+  func testCleanerCanReduceToAnotherType() throws {
+    var result: Result<[String]>?
+
+    _ = try Scientist<[String]>().science { experiment in
+      experiment.enabled = { true }
+      experiment.publish = { result = $0 }
+
+      experiment.use(control: { ["a", "b", "c"] })
+      experiment.tryNew(candidate: { ["a", "b", "c"] })
+
+      // The point of cleaning: publish something smaller than the value itself.
+      experiment.clean { users in users.count }
+    }
+
+    XCTAssertEqual(result?.control?.cleanedValue as? Int, 3)
+  }
 }
