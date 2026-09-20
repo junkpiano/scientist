@@ -31,10 +31,19 @@ public struct Observation<T: Equatable> {
   /// It is `nil` whenever ``value`` is — a behavior that threw has nothing to reduce — and
   /// also when no cleaner was registered, in which case ``value`` is already the thing to
   /// publish. It is not a fallback copy of ``value``: `T` is only `Equatable`, and this is
-  /// `Sendable`.
+  /// `Sendable`. A behavior that successfully returned `nil` is not the same as one that
+  /// threw, and its `nil` is passed to the cleaner like any other value.
   ///
-  /// Computed once, when the behavior runs.
-  public var cleanedValue: (any Sendable)?
+  /// The cleaner runs on each read rather than once up front, so that nothing an
+  /// ill-behaved cleaner does to a reference type can reach the comparison, which has
+  /// finished by the time anything reads this. Keep a cleaner cheap and free of side
+  /// effects; it is a reduction, not a step of the experiment.
+  public var cleanedValue: (any Sendable)? {
+    guard let value = value else {
+      return nil
+    }
+    return experiment.cleanedValue(for: value)
+  }
 
   /// The error the block threw, or `nil` if it returned normally.
   ///
@@ -67,12 +76,6 @@ public struct Observation<T: Equatable> {
     let end = DispatchTime.now()
 
     during = Double(end.uptimeNanoseconds - start.uptimeNanoseconds) / 1000000.0
-
-    // After the timing ends: cleaning is bookkeeping for the publish handler, not part of
-    // the behavior being measured.
-    if let value = value {
-      cleanedValue = experiment.cleanedValue(for: value)
-    }
   }
 
   func equivalentTo(

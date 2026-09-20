@@ -810,9 +810,12 @@ class ScientistTests: XCTestCase {
       }
     }
 
-    XCTAssertEqual(cleanedValues, ["control value"], "a behavior that threw has nothing to clean.")
-    XCTAssertNil(result?.mismatches.first?.cleanedValue)
+    XCTAssertNil(
+      result?.mismatches.first?.cleanedValue, "a behavior that threw has nothing to clean.")
+    XCTAssertEqual(cleanedValues, [], "and reading it does not reach the cleaner.")
+
     XCTAssertEqual(result?.control?.cleanedValue as? String, "CONTROL VALUE")
+    XCTAssertEqual(cleanedValues, ["control value"])
   }
 
   func testCleaningDoesNotAffectTheComparison() throws {
@@ -834,6 +837,42 @@ class ScientistTests: XCTestCase {
     XCTAssertEqual(result?.mismatches.map { $0.name }, ["candidate"])
   }
 
+  // A reference type whose equality looks at one mutable property, to pin down that
+  // cleaning cannot reach back and change what the comparison sees.
+  private final class Mutable: Equatable {
+    var id: Int
+
+    init(id: Int) {
+      self.id = id
+    }
+
+    static func == (lhs: Mutable, rhs: Mutable) -> Bool {
+      return lhs.id == rhs.id
+    }
+  }
+
+  func testAMutatingCleanerCannotMaskAMismatch() throws {
+    var result: Result<Mutable>?
+
+    _ = try Scientist<Mutable>().science { experiment in
+      experiment.enabled = { true }
+      experiment.publish = { result = $0 }
+
+      experiment.use(control: { Mutable(id: 1) })
+      experiment.tryNew(candidate: { Mutable(id: 2) })
+
+      // A cleaner has no business mutating its input, but a reference type lets it. The
+      // comparison must already have happened by the time it runs.
+      experiment.clean { object in
+        object.id = 0
+        return object.id
+      }
+    }
+
+    XCTAssertEqual(result?.mismatched(), true, "cleaning must not reach back into the comparison.")
+    XCTAssertEqual(result?.mismatches.map { $0.name }, ["candidate"])
+  }
+
   func testCleanerKeepsTheLastOneRegistered() throws {
     var result: Result<String>?
 
@@ -849,6 +888,74 @@ class ScientistTests: XCTestCase {
     }
 
     XCTAssertEqual(result?.control?.cleanedValue as? String, "second")
+  }
+
+  func testCleanerRunsOnlyWhenTheCleanedValueIsRead() throws {
+    var result: Result<String>?
+    var cleanerCalls = 0
+
+    _ = try Scientist<String>().science { experiment in
+      experiment.enabled = { true }
+      experiment.publish = { result = $0 }
+
+      experiment.use(control: { "value" })
+      experiment.tryNew(candidate: { "value" })
+
+      experiment.clean { value in
+        cleanerCalls += 1
+        return value.uppercased()
+      }
+    }
+
+    XCTAssertEqual(cleanerCalls, 0, "a publish handler that ignores cleaned values pays nothing.")
+
+    _ = result?.control?.cleanedValue
+    XCTAssertEqual(cleanerCalls, 1)
+
+    _ = result?.control?.cleanedValue
+    XCTAssertEqual(cleanerCalls, 2, "the cleaner runs per read; it is not memoized.")
+  }
+
+  func testCleanerIsNotRunForAnExperimentThatDidNotRun() throws {
+    var cleanerCalls = 0
+
+    let returnValue = try Scientist<String>().science { experiment in
+      experiment.enabled = { false }
+
+      experiment.use(control: { "control value" })
+      experiment.tryNew(candidate: { "candidate value" })
+
+      experiment.clean { value in
+        cleanerCalls += 1
+        return value
+      }
+    }
+
+    XCTAssertEqual(returnValue, "control value")
+    XCTAssertEqual(cleanerCalls, 0, "no observations, so nothing to clean.")
+  }
+
+  func testCleanerReceivesAValueThatWasSuccessfullyNil() throws {
+    var result: Result<String?>?
+    var cleanedValues: [String?] = []
+
+    _ = try Scientist<String?>().science { experiment in
+      experiment.enabled = { true }
+      experiment.publish = { result = $0 }
+
+      // Returning nil is an outcome, unlike throwing, so it is cleaned like any other.
+      experiment.use(control: { nil })
+      experiment.tryNew(candidate: { nil })
+
+      experiment.clean { value in
+        cleanedValues.append(value)
+        return value ?? "was nil"
+      }
+    }
+
+    XCTAssertEqual(result?.control?.cleanedValue as? String, "was nil")
+    XCTAssertEqual(cleanedValues.count, 1)
+    XCTAssertEqual(cleanedValues.first, String?.none)
   }
 
   func testCleanerCanReduceToAnotherType() throws {

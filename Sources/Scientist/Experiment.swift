@@ -170,10 +170,13 @@ final public class Experiment<T: Equatable> {
   /// }
   /// ```
   ///
-  /// Cleaning does not affect the comparison: candidates are still compared against the
-  /// control by their real values, so a cleaner cannot mask a mismatch. It runs once per
-  /// observation, whether or not ``publish`` reads the result, and not at all for a
-  /// behavior that threw.
+  /// Cleaning does not affect the comparison: candidates are compared against the control
+  /// by their real values, and the comparison is over before a cleaner runs, so not even
+  /// one that mutates a reference type can mask a mismatch.
+  ///
+  /// A cleaner runs when ``Observation/cleanedValue`` is read — on each read, and never
+  /// for a behavior that threw or for an experiment that did not run. Keep it cheap and
+  /// free of side effects.
   ///
   /// - Parameter clean: Reduces a value to the form to publish.
   public func clean(_ clean: @escaping CleanerBlock) {
