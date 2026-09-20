@@ -45,7 +45,8 @@ public struct Scientist<T: Equatable> {
   /// - Returns: The value returned by the control behavior.
   /// - Throws: Whatever the control behavior threw, or ``ExperimentError`` if the
   ///   requested behavior is missing or produced no value. A candidate that throws is
-  ///   recorded, not propagated.
+  ///   recorded, not propagated. See ``Experiment/raiseOnMismatches`` for the case where a
+  ///   mismatch throws in the control's place.
   public func science(
     name: String = "", options: [String: Any] = [:], _ process: (Experiment<T>) -> Void
   ) throws -> T {
@@ -67,7 +68,8 @@ public struct Scientist<T: Equatable> {
   /// - Returns: The value returned by the control behavior.
   /// - Throws: Whatever the control behavior threw, or ``ExperimentError`` if the
   ///   requested behavior is missing or produced no value. A candidate that throws is
-  ///   recorded, not propagated.
+  ///   recorded, not propagated. See ``Experiment/raiseOnMismatches`` for the case where a
+  ///   mismatch throws in the control's place.
   public static func run(
     name: String = "", options: [String: Any] = [:], _ process: (Experiment<T>) -> Void
   ) throws -> T {

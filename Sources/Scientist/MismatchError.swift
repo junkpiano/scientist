@@ -50,11 +50,14 @@ public struct MismatchError: Error, CustomStringConvertible {
   /// Describes an outcome so that two different ones cannot read the same way.
   ///
   /// The type is named because two error types can describe themselves identically, and
-  /// that difference is exactly what made the run mismatch. The `threw` and `returned`
-  /// prefixes keep a thrown error apart from a value that happens to read like one.
+  /// that difference is exactly what made the run mismatch. It is named with
+  /// `String(reflecting:)` rather than plain interpolation, so that two error types
+  /// sharing a short name are told apart by the module and the types enclosing them. The
+  /// `threw` and `returned` prefixes keep a thrown error apart from a value that happens
+  /// to read like one.
   private static func describe<T: Equatable>(_ observation: Observation<T>) -> String {
     if let error = observation.error {
-      return "threw \(type(of: error)): \(error)"
+      return "threw \(String(reflecting: type(of: error))): \(error)"
     }
     if let value = observation.value {
       return "returned \(value)"
